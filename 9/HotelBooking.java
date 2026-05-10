@@ -11,3 +11,9 @@ public interface HotelBooking extends Remote {
     // Get current bookings (for demonstration)
     String listBookings() throws RemoteException;
 }
+
+//cd to the directory containing HotelBooking.java
+// javac *.java
+//rmiregistry
+//java HotelBookingServer (in separate terminal windows)
+//java HotelBookingClient (in separate terminal windows)
