@@ -1,0 +1,66 @@
+import requests
+import os
+
+folder = input("Enter folder number: ")
+
+api_urls = [
+    f"https://api.github.com/repos/GauravKumbhar0491/CL-3/contents/{folder}"
+]
+
+TOKEN = os.getenv("GITHUB_TOKEN")
+
+headers = {
+    "Authorization": f"Bearer {TOKEN}",
+    "Accept": "application/vnd.github+json"
+}
+
+os.makedirs(folder, exist_ok=True)
+
+response = None
+
+for url in api_urls:
+
+    try:
+
+        r = requests.get(url, headers=headers, timeout=10)
+
+        if r.status_code == 200:
+
+            response = r
+            break
+
+    except requests.RequestException:
+        pass
+
+if response is not None:
+
+    try:
+
+        data = response.json()
+
+        for file in data:
+
+            if file["type"] == "file":
+
+                download_url = file["download_url"]
+                file_path = os.path.join(folder, file["name"])
+
+                try:
+
+                    file_data = requests.get(
+                        download_url,
+                        headers=headers,
+                        timeout=10
+                    )
+
+                    if file_data.status_code == 200:
+
+                        with open(file_path, "wb") as f:
+
+                            f.write(file_data.content)
+
+                except requests.RequestException:
+                    pass
+
+    except Exception:
+        pass
