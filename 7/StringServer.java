@@ -1,3 +1,7 @@
+"""Design a distributed application using RMI for remote computation where client submits two
+strings to the server and server returns the concatenation of the given strings.""";
+
+
 import java.rmi.*;
 import java.rmi.server.*;
 import java.rmi.registry.LocateRegistry;
