@@ -1,0 +1,801 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>RPC </title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="35cf2684-cdf2-802b-90c3-cec17381adae" class="page sans"><header><h1 class="page-title" dir="auto">RPC </h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-803f-b457-c054541653c1" class="">Let me break down this RPC (Remote Procedure Call) application in very simple language.</p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8045-ac78-d6e9f248380e"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-80ae-be0e-d2cdd8c35da6" class="">🌐 What is RPC?</h2></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8074-96b5-dcb44aaf2e29" class=""><strong>RPC = Remote Procedure Call</strong></p></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-802b-9f2a-e286657f7d1f" class="">Imagine you have a <strong>calculator</strong> in another room. You shout a number through the wall, and someone on the other side calculates it and shouts the answer back. That&#x27;s RPC!</p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="35cf2684-cdf2-803c-8e01-fa6ca097a5e5" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">YOUR COMPUTER (Client)          ANOTHER COMPUTER (Server)
+      │                                   │
+      │  ── &quot;Calculate factorial(5)!&quot; ──► │
+      │                                   │  computes 120
+      │  ◄── &quot;Answer is 120!&quot; ──────────  │
+      │                                   │</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8015-97d8-eca8414d87dc" class="">This code has <strong>two separate programs:</strong></p></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8086-9842-feb2125424eb" class="bulleted-list"><li style="list-style-type:disc">🖥️ <strong>Server</strong> → does the math (factorial)</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80c0-9023-e1d03f283ea5" class="bulleted-list"><li style="list-style-type:disc">💻 <strong>Client</strong> → sends a number and gets the answer</li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8091-9a54-e85995f69f5a"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-800d-bd62-e6c8d93aad61" class="">🖥️ SERVER SIDE — Full Breakdown</h2></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" integrity="sha512-AKaNmg8COK0zEbjTdMHJAPJ0z6VeNqvRvH4/d5M4sHJbQQUToMBtodq4HaV4fa+WV2UTfoperElm66c9/8cKmQ==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><pre id="35cf2684-cdf2-80bb-a68e-f303033de775" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">from xmlrpc.server import SimpleXMLRPCServer</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80d5-8b84-d3e96cd52680" class="bulleted-list"><li style="list-style-type:disc"><code>xmlrpc</code> → a built-in Python library for RPC communication</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80cc-9fdc-db46ffe3ff27" class="bulleted-list"><li style="list-style-type:disc"><code>XML</code> → the data format used to send messages between client and server (like a language both sides understand)</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8070-84f4-f32254e5aae6" class="bulleted-list"><li style="list-style-type:disc"><code>SimpleXMLRPCServer</code> → a ready-made server class that handles all the network communication for you</li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-803b-9921-fb3b371b88da"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8083-afea-cf5804a9e655" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">server = SimpleXMLRPCServer((&quot;localhost&quot;, 1234))</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-80e1-be1f-da906ac06413" class="">Creates a server and tells it <strong>where to listen</strong>:</p></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-8086-a96d-e69ecc320231" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-808c-9329-f852efc9ac96"><th id="S&gt;Qt" class="simple-table-header-color simple-table-header">Part</th><th id="@Uvl" class="simple-table-header-color simple-table-header">Meaning</th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8017-8a02-e70686a78342"><td id="S&gt;Qt" class=""><code>&quot;localhost&quot;</code></td><td id="@Uvl" class="">Run on <strong>this same computer</strong> (IP: 127.0.0.1)</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-805c-aafa-cd7f98a5184c"><td id="S&gt;Qt" class=""><code>1234</code></td><td id="@Uvl" class="">Listen on <strong>port 1234</strong> (like a door number in a building)</td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8027-984a-d2ed2e913a28" class="">Think of it like opening a shop at <strong>&quot;Building: localhost, Door: 1234&quot;</strong></p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8019-a152-ec424d448642"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8013-b063-d6e7facd765b" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">@server.register_function
+def factorial(n):</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-804c-b8c3-d8014edcc286" class="bulleted-list"><li style="list-style-type:disc"><code>def factorial(n)</code> → defines a normal Python function</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80cc-b6c5-e9875eee9dfe" class="bulleted-list"><li style="list-style-type:disc"><code>@server.register_function</code> → this <strong>decorator</strong> tells the server: <em>&quot;Hey, make this function available for clients to call remotely&quot;</em></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80fb-aaa8-cf6f99840578" class="bulleted-list"><li style="list-style-type:disc">Without this decorator, the function would only work locally — no client could access it</li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8025-94f2-ecd39437b01f"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80f3-bbb2-e16f449c25a4" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">    if n &lt; 0:
+        return &quot;Error: Factorial of negative number not possible&quot;</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-809f-b7d4-f3d010afa561" class="bulleted-list"><li style="list-style-type:disc">Factorial is only defined for <strong>non-negative numbers</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80dd-b127-c2b5c51582ab" class="bulleted-list"><li style="list-style-type:disc">0! = 1, 1! = 1, 5! = 120 ... but (-3)! = ❌ undefined</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8039-bb98-c8072b4b13c8" class="bulleted-list"><li style="list-style-type:disc">Returns an error message string if someone sends a negative number</li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80fd-b1a0-d67334792daf"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80e6-a09d-ca11a135c8de" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">    result = 1
+    for i in range(1, n + 1):
+        result *= i
+    return result</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8073-a27a-d385de2c3184" class="">Calculates factorial using a loop:</p></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8004-9527-d0b131866c51" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">factorial(5):
+  result = 1
+  i=1 → result = 1 × 1 = 1
+  i=2 → result = 1 × 2 = 2
+  i=3 → result = 2 × 3 = 6
+  i=4 → result = 6 × 4 = 24
+  i=5 → result = 24 × 5 = 120
+  return 120</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8017-b8a1-d3bab1c8077f" class="bulleted-list"><li style="list-style-type:disc"><code>range(1, n+1)</code> → generates numbers 1, 2, 3 ... n</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80cb-916d-f435f9908f7c" class="bulleted-list"><li style="list-style-type:disc"><code>n+1</code> because <code>range()</code> stops <strong>before</strong> the end value</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8002-8f43-c8ccda6cc619" class="bulleted-list"><li style="list-style-type:disc"><code>result *= i</code> → shorthand for <code>result = result * i</code></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8039-b627-d9600ec05ce8"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80e8-883a-d0544509bf36" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">print(&quot;RPC Server running on port 1234...&quot;)
+server.serve_forever()</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80ab-bf41-ef13cb3a9722" class="bulleted-list"><li style="list-style-type:disc"><code>print(...)</code> → just a message so you know the server started</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-806c-baee-e36cc7c8544f" class="bulleted-list"><li style="list-style-type:disc"><code>serve_forever()</code> → keeps the server <strong>running non-stop</strong>, waiting for clients<div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8026-bffc-f21c3dc09408" class="bulleted-list"><li style="list-style-type:circle">Like a restaurant that never closes</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-808f-8e55-f512d1c2b4f1" class="bulleted-list"><li style="list-style-type:circle">Stops only when you press <code>Ctrl+C</code></li></ul></div></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-800a-a2f1-cfa7b4f1c49a"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8000-92f8-f612614d364a" class="">💻 CLIENT SIDE — Full Breakdown</h2></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8067-9fd8-e9b79929ff1d" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">import xmlrpc.client</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-808c-8b3f-fd132db4e0bf" class="bulleted-list"><li style="list-style-type:disc">The <strong>client version</strong> of the xmlrpc library</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8036-b95f-c678aa4de27a" class="bulleted-list"><li style="list-style-type:disc">Server uses <code>xmlrpc.server</code>, Client uses <code>xmlrpc.client</code> — different roles, same protocol</li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8038-ad36-d1caa1a48aa9"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80f1-b9a1-da706b64ba50" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">server = xmlrpc.client.ServerProxy(&quot;http://localhost:1234/&quot;)</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8005-ba96-c48f5d4db09c" class="bulleted-list"><li style="list-style-type:disc"><code>ServerProxy</code> → creates a <strong>fake/proxy object</strong> that represents the remote server</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80e8-b03f-ff168ded8178" class="bulleted-list"><li style="list-style-type:disc"><code>&quot;http://localhost:1234/&quot;</code> → address of the server<div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80df-94d6-fd059f943703" class="bulleted-list"><li style="list-style-type:circle"><code>http://</code> → communication protocol</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-802f-97a5-f5705ea1ac48" class="bulleted-list"><li style="list-style-type:circle"><code>localhost</code> → server is on the same machine</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8074-a970-f65f04a3ba5b" class="bulleted-list"><li style="list-style-type:circle"><code>1234</code> → port number (must match the server!)</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><blockquote id="35cf2684-cdf2-8088-ad51-f1d5c9742236" class="">🔑 <strong>Key idea:</strong> After this line, <code>server</code> looks like a normal Python object, but every method you call on it actually travels over the network to the real server!</blockquote></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-800d-8759-dc78eb656532"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8019-b3d8-cbade78edc22" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">num = int(input(&quot;Enter a number: &quot;))</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80e0-bfa0-e70743fcc9d5" class="bulleted-list"><li style="list-style-type:disc"><code>input(...)</code> → waits for the user to type something (returns a <strong>string</strong>)</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80d6-9961-c688b8d1dd68" class="bulleted-list"><li style="list-style-type:disc"><code>int(...)</code> → converts that string to an <strong>integer</strong><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8030-b819-fab98ba1c504" class="bulleted-list"><li style="list-style-type:circle">e.g., user types <code>&quot;5&quot;</code> → becomes <code>5</code></li></ul></div></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80ea-91fc-c88841dd2df2"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80b7-b0fa-f92bf1f73ce3" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">result = server.factorial(num)</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8036-8003-c9eb504c3130" class="">This one line does <strong>a lot</strong> behind the scenes:</p></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80f5-b484-c34137549440" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">1. Client packages num=5 into XML format
+2. Sends HTTP request to http://localhost:1234/
+3. Server receives it, runs factorial(5)
+4. Server packages result=120 into XML
+5. Sends response back to client
+6. Client unpacks XML → result = 120</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-80d0-8b94-f0f0c8783ddd" class="">To <strong>you</strong>, it looks like a simple function call. But secretly it&#x27;s a full network round-trip!</p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-803a-bed9-ee554761a3f5"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8085-870c-fa46ba552e5a" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">print(&quot;Factorial received from server:&quot;, result)</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8000-b532-c3ad5cddf46f" class="">Prints the final answer received from the server.</p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80ad-9155-f05355c23d41"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8038-96ca-e2a6a1074675" class="">🔄 Complete Flow — Step by Step</h2></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80f8-9439-d433c7aa4a13" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">SERVER starts up
+│
+│  Registers factorial() function
+│  Opens port 1234
+│  Waits... 👂
+│
+│                        CLIENT starts up
+│                        │
+│                        │  Connects to localhost:1234
+│                        │  User types: 5
+│                        │
+│  ◄── XML Request ──────┤
+│      factorial(5)       │
+│                        │
+│  Runs factorial(5)=120  │
+│                        │
+├──── XML Response ──────►│
+│    result = 120         │
+│                        │
+│  Waits for next...      │  Prints: &quot;Factorial received: 120&quot;
+│  👂                     │  Exits</code></pre></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-801f-a324-c8da407af34d"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-80df-9477-f588e7e75ba0" class="">📦 What is XML in XMLRPC?</h2></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8092-ac4e-ee8533c3e86f" class="">When client calls <code>server.factorial(5)</code>, the data is sent as <strong>XML</strong> (a text format):</p></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80d0-8c07-e62d1b704f2e" class="code code-wrap"><code class="language-xml" style="white-space:pre-wrap;word-break:break-all">&lt;!-- Request sent by client --&gt;
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;methodCall&gt;
+  &lt;methodName&gt;factorial&lt;/methodName&gt;
+  &lt;params&gt;
+    &lt;param&gt;&lt;value&gt;&lt;int&gt;5&lt;/int&gt;&lt;/value&gt;&lt;/param&gt;
+  &lt;/params&gt;
+&lt;/methodCall&gt;
+
+&lt;!-- Response sent by server --&gt;
+&lt;?xml version=&quot;1.0&quot;?&gt;
+&lt;methodResponse&gt;
+  &lt;params&gt;
+    &lt;param&gt;&lt;value&gt;&lt;int&gt;120&lt;/int&gt;&lt;/value&gt;&lt;/param&gt;
+  &lt;/params&gt;
+&lt;/methodResponse&gt;</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-80af-a563-e56e8e7f01ed" class="">Python handles all this XML <strong>automatically</strong> — you never have to write it yourself!</p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80b1-b357-edb71b02dbdd"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-80fd-915d-f72435012a92" class="">🐛 Issues in Original Code</h2></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-80a2-a8dc-f680d8164b8b" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-806d-bc01-ece4a95309b5"><th id="]p~b" class="simple-table-header-color simple-table-header">#</th><th id="hi{:" class="simple-table-header-color simple-table-header">Issue</th><th id="Ehx@" class="simple-table-header-color simple-table-header">Fix</th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-802c-a987-d1edd0173644"><td id="]p~b" class="">1</td><td id="hi{:" class="">Server and Client code written in <strong>same file</strong></td><td id="Ehx@" class="">Split into <code>server.py</code> and <code>client.py</code></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80d5-a34e-f04e656d4901"><td id="]p~b" class="">2</td><td id="hi{:" class="">No handling if client connects <strong>before server starts</strong></td><td id="Ehx@" class="">Wrap client in try/except</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80c1-8e57-c1d8e7bf551a"><td id="]p~b" class="">3</td><td id="hi{:" class=""><code>serve_forever()</code> can&#x27;t be stopped cleanly</td><td id="Ehx@" class="">Add <code>allow_none=True</code> and keyboard interrupt handler</td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80fc-9059-cce5862a23c2"/></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8045-a7f3-e57a47d4486e"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8035-94bd-ff2a22ab9f7d" class="">🧠 Summary Table</h2></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-80be-bc87-c229ecfb4c58" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8015-a214-c41431a03aec"><th id="ncTo" class="simple-table-header-color simple-table-header">Term</th><th id="Mak=" class="simple-table-header-color simple-table-header">Simple Meaning</th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80a9-a31c-dcf7cbc5ddcf"><td id="ncTo" class=""><code>RPC</code></td><td id="Mak=" class="">Calling a function that runs on another computer</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8059-a69b-f56d9befbc25"><td id="ncTo" class=""><code>XML</code></td><td id="Mak=" class="">Text format used to package and send data</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80be-9dc7-e43312c965ac"><td id="ncTo" class=""><code>SimpleXMLRPCServer</code></td><td id="Mak=" class="">Sets up the server to listen for function calls</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80b6-a6bc-db9a20968eaf"><td id="ncTo" class=""><code>ServerProxy</code></td><td id="Mak=" class="">Magic object — looks local, works remotely</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8010-8db6-e5fd9fe81869"><td id="ncTo" class=""><code>register_function</code></td><td id="Mak=" class="">Makes a function available to clients</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8021-a196-f9be657c3e11"><td id="ncTo" class=""><code>serve_forever</code></td><td id="Mak=" class="">Keeps server alive, waiting for requests</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-802f-b5e0-f10b537aff72"><td id="ncTo" class=""><code>localhost</code></td><td id="Mak=" class="">This same computer</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80b7-8534-de0742d538f7"><td id="ncTo" class=""><code>1234</code></td><td id="Mak=" class="">Port (door number) the server listens on</td></tr></div></tbody></table></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

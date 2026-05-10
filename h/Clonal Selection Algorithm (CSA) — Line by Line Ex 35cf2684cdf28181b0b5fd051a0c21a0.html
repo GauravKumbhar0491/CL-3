@@ -1,0 +1,743 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Clonal Selection Algorithm (CSA) — Line by Line Explanation</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="35cf2684-cdf2-8181-b0b5-fd051a0c21a0" class="page sans"><header><h1 class="page-title" dir="auto">Clonal Selection Algorithm (CSA) — Line by Line Explanation</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-811e-835d-cd9d07dbe569" class=""><mark class="highlight-default">I&#x27;ll explain this code in very simple language, just like before. Think of it like this: Your body has an </mark><mark class="highlight-default"><strong>immune system</strong></mark><mark class="highlight-default"> that fights germs. When a germ enters, your body finds the </mark><em><mark class="highlight-default">best antibodies</mark></em><mark class="highlight-default"> that match the germ, makes many copies (clones) of them, slightly changes some copies (mutation) to make them even better, and then uses the strongest ones to defeat the germ. </mark></p></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-81ce-b326-e60526467649" class=""><mark class="highlight-default">The </mark><mark class="highlight-default"><strong>Clonal Selection Algorithm (CSA)</strong></mark><mark class="highlight-default"> copies this exact biological idea to solve math/optimization problems on a computer! 🧬</mark></p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-81cd-982b-e98506a5e369"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-810a-b3f3-d9b067d32b3d" class=""><mark class="highlight-default">🌱 Big Picture First</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81e0-8180-ce7c952ed97a" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><strong>Goal of this code</strong></mark><mark class="highlight-default">: Find the value of </mark><mark class="highlight-default"><code>x</code></mark><mark class="highlight-default"> that makes </mark><mark class="highlight-default"><code>f(x) = x²</code></mark><mark class="highlight-default"> as small as possible.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8162-93d6-c7e9d817c749" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><strong>Correct answer</strong></mark><mark class="highlight-default">: We already know the answer is </mark><mark class="highlight-default"><code>x = 0</code></mark><mark class="highlight-default"> (because 0² = 0, the smallest). But the algorithm has to </mark><em><mark class="highlight-default">discover</mark></em><mark class="highlight-default"> this on its own.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81a7-84e5-e4b7e21f55d4" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><strong>CSA</strong></mark><mark class="highlight-default"> is inspired by how the human immune system creates and improves antibodies.</mark></li></ul></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-812c-9fb8-f697f3842f13" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-817c-95c8-c389b56538de"><th id="pRbt" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Biology Term</mark></th><th id=";YNB" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Algorithm Meaning</mark></th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81e3-94a6-dec218afe906"><td id="pRbt" class=""><mark class="highlight-default">Antibody</mark></td><td id=";YNB" class=""><mark class="highlight-default">A candidate solution (a number </mark><mark class="highlight-default"><code>x</code></mark><mark class="highlight-default">)</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81e0-8a52-c306618a55ed"><td id="pRbt" class=""><mark class="highlight-default">Antigen</mark></td><td id=";YNB" class=""><mark class="highlight-default">The problem we want to solve</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-819b-a17f-f05c9aff9ca6"><td id="pRbt" class=""><mark class="highlight-default">Affinity</mark></td><td id=";YNB" class=""><mark class="highlight-default">How good a solution is (fitness)</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-818e-961c-c0b41655e2a0"><td id="pRbt" class=""><mark class="highlight-default">Cloning</mark></td><td id=";YNB" class=""><mark class="highlight-default">Making copies of the best solutions</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-813c-b86f-c1db19ee0d2d"><td id="pRbt" class=""><mark class="highlight-default">Hypermutation</mark></td><td id=";YNB" class=""><mark class="highlight-default">Slightly changing the clones randomly</mark></td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8134-a4b9-ddae07f7cd00"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-810d-b243-f9f1efd0a986" class=""><mark class="highlight-default">📦 Section 1: Importing Library</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8122-b2b8-f1ecb836aaf7" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>numpy</code></mark><mark class="highlight-default"> (np) = a powerful Python library for working with arrays and doing fast math operations.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81a2-afc3-fd481d5d9d54" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">We use it to create random numbers, sort arrays, and handle calculations.</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8173-b686-c111fca45024"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-81ce-9cd7-e513c7b2682e" class=""><mark class="highlight-default">🎯 Section 2: The Objective Function</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81a4-bcc2-cb49c9dc32cd" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><strong>Objective function</strong></mark><mark class="highlight-default"> = the function we want to </mark><em><mark class="highlight-default">minimize</mark></em><mark class="highlight-default"> (make as small as possible).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81f4-a30a-c3061ce30e3b" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Here it&#x27;s </mark><mark class="highlight-default"><code>f(x) = x²</code></mark><mark class="highlight-default"> → a simple U-shaped parabola.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8120-ae9b-d3b976b02210" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">The smallest value of </mark><mark class="highlight-default"><code>x²</code></mark><mark class="highlight-default"> is </mark><mark class="highlight-default"><code>0</code></mark><mark class="highlight-default">, when </mark><mark class="highlight-default"><code>x = 0</code></mark><mark class="highlight-default">.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8159-99db-d33ad36c7769" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">The algorithm&#x27;s job is to discover that </mark><mark class="highlight-default"><code>x = 0</code></mark><mark class="highlight-default"> gives the lowest output.</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-818e-af7d-f90e620f15b4"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8105-a922-efea0723e60e" class=""><mark class="highlight-default">🧬 Section 3: The Main CSA Function</mark></h2></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-811b-bf69-f7abb46ea0a2" class=""><mark class="highlight-default">This function takes 5 inputs:</mark></p></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-8199-a0b8-ff1d01410584" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81c6-b6af-dff99ce6e676"><th id="LC~h" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Parameter</mark></th><th id="W=_?" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Meaning</mark></th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81ce-8648-c7c6b2fab373"><td id="LC~h" class=""><mark class="highlight-default"><code>population_size</code></mark></td><td id="W=_?" class=""><mark class="highlight-default">How many antibodies (candidate solutions) we have.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-815d-9746-cb60cf706c72"><td id="LC~h" class=""><mark class="highlight-default"><code>num_clones</code></mark></td><td id="W=_?" class=""><mark class="highlight-default">How many best antibodies to select and clone.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81b3-89ec-efc21d655583"><td id="LC~h" class=""><mark class="highlight-default"><code>mutation_rate</code></mark></td><td id="W=_?" class=""><mark class="highlight-default">How strongly clones get mutated (changed).</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81ea-b92a-dd5aec763e55"><td id="LC~h" class=""><mark class="highlight-default"><code>num_generations</code></mark></td><td id="W=_?" class=""><mark class="highlight-default">How many times we repeat the process.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81cd-90c7-dd87d036fcdd"><td id="LC~h" class=""><mark class="highlight-default"><code>search_space</code></mark></td><td id="W=_?" class=""><mark class="highlight-default">The range where </mark><mark class="highlight-default"><code>x</code></mark><mark class="highlight-default"> can exist (e.g., -10 to 10).</mark></td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8178-b03a-d22a85433d8d"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8138-9cff-c2c96b85966c" class=""><mark class="highlight-default">👥 Section 4: Initialize the Population</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-814e-bcb6-e2c5821155cc" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>np.random.uniform(low, high, size)</code></mark><mark class="highlight-default"> → generates </mark><mark class="highlight-default"><code>size</code></mark><mark class="highlight-default"> random decimal numbers between </mark><mark class="highlight-default"><code>low</code></mark><mark class="highlight-default"> and </mark><mark class="highlight-default"><code>high</code></mark><mark class="highlight-default">.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-819e-8463-eb0e2e9294fe" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Here it creates </mark><mark class="highlight-default"><strong>20 random values</strong></mark><mark class="highlight-default"> between -10 and 10.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81e2-9d2b-d323741203fa" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Example: </mark><mark class="highlight-default"><code>[2.1, -5.6, 7.8, 0.4, -9.1, ...]</code></mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8151-9cd4-e6c4ad0f5274" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">These are our </mark><mark class="highlight-default"><strong>starting antibodies</strong></mark><mark class="highlight-default"> — random guesses of </mark><mark class="highlight-default"><code>x</code></mark><mark class="highlight-default">.</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-81fe-a01d-e91251ecd9ee"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-81c1-a8db-c1dca1d65aae" class=""><mark class="highlight-default">🔁 Section 5: The Generation Loop</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8193-8168-eaaac97f5f49" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">This loop runs </mark><mark class="highlight-default"><strong>50 times</strong></mark><mark class="highlight-default"> (one cycle = one generation).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-817d-bf2d-cb7c0c96d3fa" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Each generation, the population improves a little bit (like evolution over time).</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-816e-bf95-f6d593bfff5d"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8175-9a61-d325e37c981f" class=""><mark class="highlight-default">📊 Section 6: Evaluate Fitness</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81c1-a159-f7c111c7b357" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">For every antibody </mark><mark class="highlight-default"><code>x</code></mark><mark class="highlight-default"> in the population, calculate </mark><mark class="highlight-default"><code>x²</code></mark><mark class="highlight-default">.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-813b-af3f-dcd293f2cf2e" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">This gives us a list of fitness values.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-813c-98cd-fbae491ec94f" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><strong>Lower fitness = better</strong></mark><mark class="highlight-default"> (because we&#x27;re minimizing).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-814a-8687-f4c4e113f719" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Example: if population = </mark><mark class="highlight-default"><code>[2, -3, 0.5]</code></mark><mark class="highlight-default">, then fitness = </mark><mark class="highlight-default"><code>[4, 9, 0.25]</code></mark><mark class="highlight-default">.</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-81ba-8f8c-cb167de13767"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-817e-a15b-d0f94e4bb1ea" class=""><mark class="highlight-default">🏆 Section 7: Select the Best Antibodies</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81b5-9a91-ce4670497787" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>np.argsort(fitness)</code></mark><mark class="highlight-default"> → returns the </mark><em><mark class="highlight-default">indices</mark></em><mark class="highlight-default"> that would sort the array from smallest to largest.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8124-881f-f1c8b318786f" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Example: if </mark><mark class="highlight-default"><code>fitness = [9, 4, 0.25]</code></mark><mark class="highlight-default">, then </mark><mark class="highlight-default"><code>argsort = [2, 1, 0]</code></mark><mark class="highlight-default"> (because index 2 has the smallest value).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-816e-9061-dce1377a8fbe" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>sorted_indices[:num_clones]</code></mark><mark class="highlight-default"> → takes the first </mark><mark class="highlight-default"><code>num_clones</code></mark><mark class="highlight-default"> (5) indices → the 5 best antibodies.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81a1-aa11-ee3852029100" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>population[...]</code></mark><mark class="highlight-default"> → picks those 5 best antibodies.</mark></li></ul></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8151-a8d2-d4d4c8d5c2cd" class=""><mark class="highlight-default">This is the </mark><mark class="highlight-default"><strong>selection step</strong></mark><mark class="highlight-default"> — keep the strongest immune cells.</mark></p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-81b7-bb1c-e366a886d73c"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-81bb-9e02-c3c2d01c1a66" class=""><mark class="highlight-default">🧪 Section 8: Cloning and Mutation</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-812d-b6a2-cdbc17d2a094" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>np.repeat</code></mark><mark class="highlight-default"> makes copies. Each of the 5 selected antibodies is copied 5 times.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8114-84f0-f4b4c86a2a7d" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Result: </mark><mark class="highlight-default"><strong>25 clones</strong></mark><mark class="highlight-default">.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8117-97b1-c0cbc3095783" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Example: if selected = </mark><mark class="highlight-default"><code>[1, 2, 3, 4, 5]</code></mark><mark class="highlight-default"> and num_clones = 5, then clones = </mark><mark class="highlight-default"><code>[1,1,1,1,1, 2,2,2,2,2, 3,3,3,3,3, ...]</code></mark><mark class="highlight-default">.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81ff-944a-e26f92a67dcf" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>np.random.normal(mean, std_dev, size)</code></mark><mark class="highlight-default"> → generates random numbers from a </mark><mark class="highlight-default"><strong>normal (Gaussian / bell curve) distribution</strong></mark><mark class="highlight-default">.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81db-b229-c7108554b0a5" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>mean = 0</code></mark><mark class="highlight-default"> → most mutations are near zero.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8113-b93b-ca0cfcc80f50" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>std_dev = mutation_rate = 0.1</code></mark><mark class="highlight-default"> → controls the size of mutation.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-817e-a95b-eea5a6a859fe" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>clones.shape</code></mark><mark class="highlight-default"> → makes sure the mutation array is the same shape as clones.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81be-8abc-df94fbbf1253" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">These are small random &quot;nudges&quot; added to each clone.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8158-9dda-dceb91e42402" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Apply the mutations to clones (slightly change each clone).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8138-902f-ffb4c7f21c56" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Example: clone = 2.0, mutation = -0.05 → mutated clone = 1.95.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81c4-8433-d39940e8ae33" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>np.clip(array, min, max)</code></mark><mark class="highlight-default"> → forces every value to stay within bounds.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8191-8adc-d7d6fa637b73" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">If a clone goes below -10, it&#x27;s set to -10. If above 10, set to 10.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81aa-a762-cd46ef908e57" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">This keeps clones inside the </mark><mark class="highlight-default"><strong>legal search space</strong></mark><mark class="highlight-default">.</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8181-99cc-fcd82c037ebf"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-816c-bd1b-ef49bbc2ee97" class=""><mark class="highlight-default">🔄 Section 9: Build the New Population</mark></h2></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-813c-84e0-fd80e02e3818" class=""><mark class="highlight-default">This line does </mark><mark class="highlight-default"><strong>two things at once</strong></mark><mark class="highlight-default">:</mark></p></div><div style="display:contents" dir="auto"><ol type="1" id="35cf2684-cdf2-817d-a4c9-f7960f86960e" class="numbered-list" start="1"><li><mark class="highlight-default">Keeps all the </mark><mark class="highlight-default"><strong>25 mutated clones</strong></mark><mark class="highlight-default"> (good solutions).</mark></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="35cf2684-cdf2-8174-a366-f50d22fb7aff" class="numbered-list" start="2"><li><mark class="highlight-default">Adds some </mark><mark class="highlight-default"><strong>fresh random antibodies</strong></mark><mark class="highlight-default"> (</mark><mark class="highlight-default"><code>population_size - num_clones</code></mark><mark class="highlight-default"> = 20 - 5 = 15 new random values).</mark></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="35cf2684-cdf2-81fe-9483-c01f319740c6" class="numbered-list" start="3"><li><mark class="highlight-default"><code>np.concatenate</code></mark><mark class="highlight-default"> joins arrays together.</mark></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="35cf2684-cdf2-81ea-9086-d5e78627e3f9" class="numbered-list" start="4"><li><mark class="highlight-default">Adding fresh random antibodies is called </mark><mark class="highlight-default"><strong>diversification</strong></mark><mark class="highlight-default"> — it prevents the algorithm from getting stuck in one place and helps it explore new areas.</mark></li></ol></div><div style="display:contents" dir="auto"><blockquote id="35cf2684-cdf2-810b-8f93-f582a761186f" class=""><mark class="highlight-default">💡 Note: The final population has 25 + 15 = </mark><mark class="highlight-default"><strong>40 antibodies</strong></mark><mark class="highlight-default">, which is bigger than 20. This is a minor quirk in the code — it grows the population each generation. A cleaner version would keep size fixed.</mark></blockquote></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-814d-ab25-cdf3ace812eb"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-81a3-bce2-dfb25adca970" class=""><mark class="highlight-default">📈 Section 10: Track the Best Solution</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8175-b51c-cd12ff876039" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>np.min(fitness)</code></mark><mark class="highlight-default"> → smallest fitness value (the best one).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81d1-ab61-fd39ec880d6e" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>np.argmin(fitness)</code></mark><mark class="highlight-default"> → the index of the smallest fitness.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-817b-8874-f0b1df0d96cb" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Print the best result of each generation so we can watch the progress.</mark></li></ul></div><div style="display:contents" dir="auto"><blockquote id="35cf2684-cdf2-810d-9c9f-c8c67963a9c5" class=""><mark class="highlight-default">⚠️ Small bug: </mark><mark class="highlight-default"><code>best_solution = population[np.argmin(fitness)]</code></mark><mark class="highlight-default"> — but </mark><mark class="highlight-default"><code>population</code></mark><mark class="highlight-default"> has already been replaced with clones! So the index might not match. Ideally, this tracking should be done </mark><em><mark class="highlight-default">before</mark></em><mark class="highlight-default"> replacing the population.</mark></blockquote></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-818e-b93d-c0cde2ea2e10"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-818b-bc90-cbd440683840" class=""><mark class="highlight-default">🎁 Section 11: Return Results</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-817f-b39b-f7acd3c2b079" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">After all 50 generations, return the best </mark><mark class="highlight-default"><code>x</code></mark><mark class="highlight-default"> and its fitness value.</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-81a2-96c3-ce37e0c4cc7e"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-81b2-8163-ece9ebe28f89" class=""><mark class="highlight-default">⚙️ Section 12: Setting Parameters</mark></h2></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-8192-b28a-fa3e6d954130" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8141-af9a-ccfe82733ce8"><th id="jYzz" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Parameter</mark></th><th id="&gt;{fa" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Value</mark></th><th id="SYpO" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Meaning</mark></th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81c2-b846-c31724cc6c6a"><td id="jYzz" class=""><mark class="highlight-default"><code>population_size</code></mark></td><td id="&gt;{fa" class=""><mark class="highlight-default">20</mark></td><td id="SYpO" class=""><mark class="highlight-default">Start with 20 random candidate solutions.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8182-9c24-de031f828ea4"><td id="jYzz" class=""><mark class="highlight-default"><code>num_clones</code></mark></td><td id="&gt;{fa" class=""><mark class="highlight-default">5</mark></td><td id="SYpO" class=""><mark class="highlight-default">Pick top 5 and clone each 5 times → 25 clones.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81de-baf1-f9c59d3c7ac4"><td id="jYzz" class=""><mark class="highlight-default"><code>mutation_rate</code></mark></td><td id="&gt;{fa" class=""><mark class="highlight-default">0.1</mark></td><td id="SYpO" class=""><mark class="highlight-default">Small mutation strength (0.1 standard deviation).</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-813d-a9b5-cca8b7661ffa"><td id="jYzz" class=""><mark class="highlight-default"><code>num_generations</code></mark></td><td id="&gt;{fa" class=""><mark class="highlight-default">50</mark></td><td id="SYpO" class=""><mark class="highlight-default">Run the cycle 50 times.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8144-884b-e4cc07081826"><td id="jYzz" class=""><mark class="highlight-default"><code>search_space</code></mark></td><td id="&gt;{fa" class=""><mark class="highlight-default">(-10, 10)</mark></td><td id="SYpO" class=""><mark class="highlight-default"><code>x</code></mark><mark class="highlight-default"> can range from -10 to +10.</mark></td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8145-8a65-d1e61cfd6426"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-81cb-b3fa-e712f7f758bf" class=""><mark class="highlight-default">🚀 Section 13: Run the Algorithm</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8180-b95e-c706c7b39763" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Calls the function with the chosen parameters.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81c3-bbe0-e8b96df2195a" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Prints the final best </mark><mark class="highlight-default"><code>x</code></mark><mark class="highlight-default"> and its </mark><mark class="highlight-default"><code>x²</code></mark><mark class="highlight-default"> value.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-815c-a86c-de93379f4d1c" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Expected output: something very close to </mark><mark class="highlight-default"><code>x ≈ 0</code></mark><mark class="highlight-default"> and fitness </mark><mark class="highlight-default"><code>≈ 0</code></mark><mark class="highlight-default">.</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8179-9ec7-c8b19852afed"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8182-9753-cad082135822" class=""><mark class="highlight-default">🧠 Quick Recap Cheat Sheet</mark></h2></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-81af-91f2-efdfd157535e" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81f6-8aca-c80e7acd269c"><th id="aDhk" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Step</mark></th><th id="dWC[" class="simple-table-header-color simple-table-header"><mark class="highlight-default">What Happens</mark></th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-811f-8d76-ee0d532f12a1"><td id="aDhk" class=""><mark class="highlight-default">1. Initialize</mark></td><td id="dWC[" class=""><mark class="highlight-default">Generate 20 random antibodies (values of x).</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-810c-9887-c720cc3a7c93"><td id="aDhk" class=""><mark class="highlight-default">2. Evaluate</mark></td><td id="dWC[" class=""><mark class="highlight-default">Calculate </mark><mark class="highlight-default"><code>x²</code></mark><mark class="highlight-default"> for each.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81db-bd06-d4d51ccd8512"><td id="aDhk" class=""><mark class="highlight-default">3. Select</mark></td><td id="dWC[" class=""><mark class="highlight-default">Pick the 5 best (smallest x²).</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81a1-b143-d5635f817527"><td id="aDhk" class=""><mark class="highlight-default">4. Clone</mark></td><td id="dWC[" class=""><mark class="highlight-default">Make 5 copies of each → 25 clones.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8114-90d5-cfa4b8be7cd6"><td id="aDhk" class=""><mark class="highlight-default">5. Mutate</mark></td><td id="dWC[" class=""><mark class="highlight-default">Add tiny random changes to each clone.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8145-8670-e5845c1de979"><td id="aDhk" class=""><mark class="highlight-default">6. Clip</mark></td><td id="dWC[" class=""><mark class="highlight-default">Keep values inside [-10, 10].</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-812f-9ee2-ffb4e6908cdd"><td id="aDhk" class=""><mark class="highlight-default">7. Diversify</mark></td><td id="dWC[" class=""><mark class="highlight-default">Add 15 fresh random antibodies.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81d9-bf6f-cce41b3ce404"><td id="aDhk" class=""><mark class="highlight-default">8. Repeat</mark></td><td id="dWC[" class=""><mark class="highlight-default">Do this 50 times.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8156-9616-e23cb5dbfd5c"><td id="aDhk" class=""><mark class="highlight-default">9. Output</mark></td><td id="dWC[" class=""><mark class="highlight-default">The best </mark><mark class="highlight-default"><code>x</code></mark><mark class="highlight-default"> ≈ 0.</mark></td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8130-a705-e61d2e4c9c37"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-81c8-8abd-fed8d661bf70" class=""><mark class="highlight-default">🔬 Comparison: CSA vs Genetic Algorithm (from your previous code)</mark></h2></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-819b-8fee-cf6648d1bf81" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8166-94c4-f36c403bc5bd"><th id="j@@r" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Feature</mark></th><th id="yf=s" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Genetic Algorithm</mark></th><th id="FZEf" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Clonal Selection Algorithm</mark></th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81ea-be87-c33e74ad5fbd"><td id="j@@r" class=""><mark class="highlight-default">Inspiration</mark></td><td id="yf=s" class=""><mark class="highlight-default">Darwin&#x27;s evolution</mark></td><td id="FZEf" class=""><mark class="highlight-default">Human immune system</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81d2-9c30-d1b711b764c4"><td id="j@@r" class=""><mark class="highlight-default">Selection</mark></td><td id="yf=s" class=""><mark class="highlight-default">Tournament / Roulette</mark></td><td id="FZEf" class=""><mark class="highlight-default">Pick top N best</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8103-9e49-d8cd3c19218a"><td id="j@@r" class=""><mark class="highlight-default">Reproduction</mark></td><td id="yf=s" class=""><mark class="highlight-default">Crossover (mix two parents)</mark></td><td id="FZEf" class=""><mark class="highlight-default">Cloning (copy one)</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81fa-b6fc-edc7526f33c4"><td id="j@@r" class=""><mark class="highlight-default">Variation</mark></td><td id="yf=s" class=""><mark class="highlight-default">Mutation + Crossover</mark></td><td id="FZEf" class=""><mark class="highlight-default">Only Mutation</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8141-9c4e-daa8c5e210e6"><td id="j@@r" class=""><mark class="highlight-default">Diversity</mark></td><td id="yf=s" class=""><mark class="highlight-default">From population mixing</mark></td><td id="FZEf" class=""><mark class="highlight-default">From adding fresh random members</mark></td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-81c9-82f1-fe422c6dcf1b"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-817e-aa54-cd9060e7d272" class=""><mark class="highlight-default">✨ Why is CSA Useful?</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8189-b660-ecf801a0ecd8" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">It&#x27;s </mark><mark class="highlight-default"><strong>simple</strong></mark><mark class="highlight-default"> — no crossover needed, just clone + mutate.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8143-b5c7-f73746ae7bef" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">It&#x27;s </mark><mark class="highlight-default"><strong>good at exploration</strong></mark><mark class="highlight-default"> because of the fresh random antibodies added each generation.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81a6-a1ec-c211a2c8368f" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">It&#x27;s used in real applications like pattern recognition, anomaly detection, scheduling, and even fraud detection (since the immune system itself detects &quot;anomalies&quot; — foreign invaders).</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8116-925a-f897c0f0c35e"/></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-81ac-b492-c744788fc308" class=""><mark class="highlight-default">If you want, I can also show you how to:<br/><br/>- </mark><mark class="highlight-default"><strong>Plot the fitness curve</strong></mark><mark class="highlight-default"> to watch the algorithm improve over generations 📉<br/><br/>- </mark><mark class="highlight-default"><strong>Fix the small bugs</strong></mark><mark class="highlight-default"> I mentioned (population size growth, best_solution tracking)<br/><br/>- </mark><mark class="highlight-default"><strong>Apply CSA to a harder function</strong></mark><mark class="highlight-default"> like </mark><mark class="highlight-default"><code>f(x) = sin(x) + x²/10</code></mark></p></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-81db-9069-c02a113b9276" class=""><mark class="highlight-default">Just let me know! 😊</mark></p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
