@@ -1,0 +1,822 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Round Robin 3</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="35cf2684-cdf2-80b8-b208-d09dea5b0874" class="page sans"><header><h1 class="page-title" dir="auto">Round Robin 3</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8034-b2cf-ced87c4920d8"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-80ad-a611-e3f9856f077e" class="">⚖️ What is Load Balancing?</h2></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8066-85aa-caf2704d95bc" class="">Imagine a <strong>restaurant</strong> with 3 waiters. If all customers go to <strong>only one waiter</strong>, that waiter gets overwhelmed while others stand idle. A <strong>manager (load balancer)</strong> distributes customers evenly among all waiters.</p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="35cf2684-cdf2-8009-95ef-fe27687fc1dd" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">Without Load Balancer:        With Load Balancer:
+
+Requests →  Server1 😵         Request1 → Server1 😊
+            Server2 😴         Request2 → Server2 😊
+            Server3 😴         Request3 → Server3 😊
+                               Request4 → Server1 😊</code></pre></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80c2-8b19-ca9dd5d6f1a0"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-80ae-a2b0-c2ed52ab5d4e" class="">📦 Setup</h2></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" integrity="sha512-AKaNmg8COK0zEbjTdMHJAPJ0z6VeNqvRvH4/d5M4sHJbQQUToMBtodq4HaV4fa+WV2UTfoperElm66c9/8cKmQ==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><pre id="35cf2684-cdf2-80f7-aa85-ceb97c2914ac" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">import random</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80f9-acd5-c73f2e83e44c" class="bulleted-list"><li style="list-style-type:disc">Imports Python&#x27;s built-in <code>random</code> library</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80ec-bd63-c850e31689b9" class="bulleted-list"><li style="list-style-type:disc">Used later by the <strong>Random Load Balancer</strong> to pick a server randomly</li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-803b-84aa-ddafc8ff860b"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-805c-85ce-d2a48d757d54" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">servers = [&quot;Server1&quot;, &quot;Server2&quot;, &quot;Server3&quot;]</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8030-b1c5-e50b5b304ab6" class="bulleted-list"><li style="list-style-type:disc">A simple <strong>list</strong> of 3 servers available to handle requests</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-807e-8aeb-df5a283f31fe" class="bulleted-list"><li style="list-style-type:disc">These are just <strong>name strings</strong> — in real life these would be actual IP addresses like <code>192.168.1.1</code></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80bb-9810-ece42f6ba518" class="bulleted-list"><li style="list-style-type:disc">Index positions matter:</li></ul></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8040-9248-e5ff6ada37d0" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">servers[0] = &quot;Server1&quot;
+servers[1] = &quot;Server2&quot;
+servers[2] = &quot;Server3&quot;</code></pre></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80ca-b77d-d1d2c255b59e"/></div><div style="display:contents" dir="auto"><h1 id="35cf2684-cdf2-80ef-b8e4-fadf4beab0fa" class="">🔄 Algorithm 1 — Round Robin Load Balancer</h1></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-806f-baf0-e2bfc9e86827" class="">What is Round Robin?</h2></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-80c9-a582-d94c81252fcf" class="">Like dealing cards — give one to each player, in order, repeatedly:</p></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8013-bb68-db54a385f681" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">Request 1 → Server1
+Request 2 → Server2
+Request 3 → Server3
+Request 4 → Server1  ← wraps back to start
+Request 5 → Server2
+Request 6 → Server3
+...</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-80d1-aaf7-dcf482ce2a59" class="">Every server gets an <strong>equal, fair, predictable</strong> turn.</p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-802c-8ebe-d014645ee3b8"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8022-b857-fafe8f2ff3ef" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">class RoundRobinLoadBalancer:</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8091-9897-ed8e8a16215a" class="bulleted-list"><li style="list-style-type:disc"><code>class</code> → creates a <strong>blueprint</strong> for the Round Robin load balancer</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80ee-a384-f6a288a897f4" class="bulleted-list"><li style="list-style-type:disc">Groups related data and functions together</li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8000-9639-f3b95860f7ed"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-805d-9da4-e39f53921211" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">    def __init__(self, servers):
+        self.servers = servers
+        self.current_index = 0</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-806d-93c0-f8d946f57753" class="bulleted-list"><li style="list-style-type:disc"><code>__init__</code> → <strong>constructor</strong> — runs automatically when object is created</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80dc-aaed-e5cd2bc33b95" class="bulleted-list"><li style="list-style-type:disc"><code>self.servers = servers</code> → saves the server list inside the object</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-806b-abe9-f933651d75ac" class="bulleted-list"><li style="list-style-type:disc"><code>self.current_index = 0</code> → a <strong>pointer</strong> that tracks whose turn it is<div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8074-8f6c-c9fc8d948de7" class="bulleted-list"><li style="list-style-type:circle">Starts at 0 → first turn goes to <code>servers[0]</code> = <code>&quot;Server1&quot;</code></li></ul></div></li></ul></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80cf-bc7b-d421067fb8f2" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">Initial state:
+  servers       = [&quot;Server1&quot;, &quot;Server2&quot;, &quot;Server3&quot;]
+  current_index =      0
+                        ↑
+                   points here</code></pre></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8033-9784-d96ed20acb68"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80ef-b21b-db4cb0036c67" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">    def get_server(self):
+        server = self.servers[self.current_index]
+        self.current_index = (self.current_index + 1) % len(self.servers)
+        return server</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-80bc-bcfc-dfe65238f28c" class="">This is the <strong>core logic</strong> — let&#x27;s break it word by word:</p></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80fd-89ac-f7a719f7feaa" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">        server = self.servers[self.current_index]</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80ca-8ea9-c67c6aeaf89c" class="bulleted-list"><li style="list-style-type:disc">Picks the server at the current index position</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-801f-93e1-d93303698056" class="bulleted-list"><li style="list-style-type:disc"><code>current_index = 0</code> → picks <code>servers[0]</code> = <code>&quot;Server1&quot;</code></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-807f-a91b-ff4902df4ef6"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80b4-a5bc-fd17aa3db512" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">        self.current_index = (self.current_index + 1) % len(self.servers)</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-80fc-bbd6-fa33abed1f6c" class="">This is the <strong>wrap-around trick</strong> using modulo <code>%</code>:</p></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80e3-961c-de89811c9ea0" class="bulleted-list"><li style="list-style-type:disc"><code>len(self.servers)</code> = 3 (total servers)</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-806c-aa5e-c213efefcb49" class="bulleted-list"><li style="list-style-type:disc"><code>%</code> = <strong>remainder after division</strong> — forces index to stay within 0,1,2</li></ul></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8066-8824-f5dc6bf9eacb" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">Step-by-step:
+  index=0 → (0+1) % 3 = 1 % 3 = 1  ✅
+  index=1 → (1+1) % 3 = 2 % 3 = 2  ✅
+  index=2 → (2+1) % 3 = 3 % 3 = 0  ✅ wraps back to 0!
+  index=0 → cycle repeats...</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-809b-b998-fd7dec313a25" class="">Without <code>%</code>, index would go 0,1,2,<strong>3,4,5</strong>... and crash with <code>IndexError</code>!</p></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-801d-877c-d1e3f4d6a458" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">        return server</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8084-9253-e674ce2babb4" class="">Sends the chosen server name back to whoever called <code>get_server()</code>.</p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8071-9657-e3c5b1b23514"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-808e-8f8c-c8224affb9d5" class="">🔄 Round Robin Visual Walkthrough (10 requests, 3 servers)</h2></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8065-81ef-d659e69b83ff" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">Request  │ current_index │ Server Picked │ next_index
+─────────┼───────────────┼───────────────┼───────────
+    1    │       0       │   Server1     │     1
+    2    │       1       │   Server2     │     2
+    3    │       2       │   Server3     │     0
+    4    │       0       │   Server1     │     1
+    5    │       1       │   Server2     │     2
+    6    │       2       │   Server3     │     0
+    7    │       0       │   Server1     │     1
+    8    │       1       │   Server2     │     2
+    9    │       2       │   Server3     │     0
+   10    │       0       │   Server1     │     1</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-809c-9e64-ca840bf23488" class="">Each server gets exactly <strong>3 or 4 requests</strong> — perfectly balanced!</p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-807e-b41c-f874feaf17ad"/></div><div style="display:contents" dir="auto"><h1 id="35cf2684-cdf2-80a0-baa2-f7ed7669c02c" class="">🎲 Algorithm 2 — Random Load Balancer</h1></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-801c-98b0-c108c2194de0" class="">What is Random Load Balancing?</h2></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-80dd-982f-dd5b3d196fee" class="">Like <strong>rolling a dice</strong> — each request picks a server completely randomly. No tracking, no order — pure chance.</p></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80bd-ad4b-d0ff858f6519" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">Request 1 → Server3  (random)
+Request 2 → Server1  (random)
+Request 3 → Server1  (random)  ← same server twice, that&#x27;s okay
+Request 4 → Server2  (random)
+...</code></pre></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80cc-89c8-f08ce96544ec"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8036-81db-e3361f782259" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">class RandomLoadBalancer:
+    def __init__(self, servers):
+        self.servers = servers</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80ef-8a78-c7457d9e4471" class="bulleted-list"><li style="list-style-type:disc">Much simpler than Round Robin — <strong>no index needed!</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8017-b15f-ccde6a9e2339" class="bulleted-list"><li style="list-style-type:disc">Just saves the server list</li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8062-a625-edc8080ae517"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-808e-b007-e88e2b693526" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">    def get_server(self):
+        return random.choice(self.servers)</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80a0-9422-e840c9929af7" class="bulleted-list"><li style="list-style-type:disc"><code>random.choice(list)</code> → picks <strong>one random element</strong> from a list</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-808e-b991-f7463b3a47c6" class="bulleted-list"><li style="list-style-type:disc">Every call is completely independent — no memory of past picks</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80c2-b36c-d553431e944c" class="bulleted-list"><li style="list-style-type:disc">Each server has equal <strong>1/3 = 33.3%</strong> chance every time</li></ul></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80d8-8434-f53089eb4a70" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">random.choice([&quot;Server1&quot;, &quot;Server2&quot;, &quot;Server3&quot;])
+       │
+       ▼
+  Rolls random number internally
+       │
+       ▼
+  Returns one of: &quot;Server1&quot;, &quot;Server2&quot;, or &quot;Server3&quot;</code></pre></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-802c-bec6-f2f478a63a18"/></div><div style="display:contents" dir="auto"><h1 id="35cf2684-cdf2-8054-8a57-e54a1d248a00" class="">🚦 <code>simulate_requests()</code> Function</h1></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-800b-babf-c50857350ea4" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">def simulate_requests(load_balancer, num_requests):</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80be-9a34-d934938bff42" class="bulleted-list"><li style="list-style-type:disc"><code>load_balancer</code> → accepts <strong>any</strong> load balancer object (Round Robin or Random)</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8005-82c1-c15f008ad5da" class="bulleted-list"><li style="list-style-type:disc"><code>num_requests</code> → how many requests to simulate</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80e9-8ce0-f8891e58cbfb" class="bulleted-list"><li style="list-style-type:disc">This is called <strong>polymorphism</strong> — one function works with multiple types!</li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80c7-894b-f6b7ecbb3fde"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80fd-b8aa-cbaa80c8dc8f" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">    for i in range(1, num_requests + 1):</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8027-88be-f09d25d7bde8" class="bulleted-list"><li style="list-style-type:disc"><code>range(1, num_requests + 1)</code> → generates numbers <strong>1 to 10</strong> (not 0 to 9)</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8008-ae9a-fb67347e02bb" class="bulleted-list"><li style="list-style-type:disc"><code>+1</code> because <code>range()</code> stops <strong>before</strong> the end value</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-809b-89e9-f426fdfaf8f8" class="bulleted-list"><li style="list-style-type:disc"><code>i</code> = request number (1, 2, 3 ... 10)</li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-806b-a114-f9fdac4596a1"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8031-bbe6-d6b757961bdc" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">        server = load_balancer.get_server()
+        print(f&quot;Request {i} routed to {server}&quot;)</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-802f-8cbd-fafdf0e3e459" class="bulleted-list"><li style="list-style-type:disc"><code>load_balancer.get_server()</code> → calls whichever algorithm&#x27;s method<div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-802f-9f4a-d66375129c76" class="bulleted-list"><li style="list-style-type:circle">If Round Robin object → uses Round Robin logic</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80f1-a34d-ece299881d92" class="bulleted-list"><li style="list-style-type:circle">If Random object → uses Random logic</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80a2-a1a8-e47dabce8e09" class="bulleted-list"><li style="list-style-type:disc"><code>f&quot;...&quot;</code> → <strong>f-string</strong> (formatted string) — inserts variable values directly<div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8051-9ca7-cf83456efebe" class="bulleted-list"><li style="list-style-type:circle"><code>{i}</code> → replaced by request number (1, 2, 3...)</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80e7-ae11-f8be33814b6d" class="bulleted-list"><li style="list-style-type:circle"><code>{server}</code> → replaced by server name (&quot;Server1&quot;, etc.)</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8002-99bd-c18eabc816a0" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">Output example:
+  Request 1 routed to Server1
+  Request 2 routed to Server2</code></pre></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8077-8243-dfea86123358"/></div><div style="display:contents" dir="auto"><h1 id="35cf2684-cdf2-80c3-88d2-ff2966b8c9bd" class="">🏁 Main Block</h1></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80b5-b792-e39c6d103124" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">if __name__ == &quot;__main__&quot;:</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80a9-9592-fc3fc6786978" class="bulleted-list"><li style="list-style-type:disc">Only runs if this file is <strong>directly executed</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8000-b192-f54068f1096f" class="bulleted-list"><li style="list-style-type:disc">Prevents auto-running if this file is imported as a module elsewhere</li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8026-a657-e653f5639619"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80cd-8600-c84c5fa7556a" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">    print(&quot;Round Robin Load Balancing:&quot;)
+    round_robin_lb = RoundRobinLoadBalancer(servers)
+    simulate_requests(round_robin_lb, 10)</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80e6-8875-f0bca5fb9a49" class="bulleted-list"><li style="list-style-type:disc">Creates a <strong>Round Robin</strong> load balancer object with our 3 servers</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80fb-ab3e-c23366db84ce" class="bulleted-list"><li style="list-style-type:disc">Simulates <strong>10 requests</strong> through it</li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-806a-a99d-d0f9487746aa"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8038-9876-cddb06433316" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">    print(&quot;\nRandom Load Balancing:&quot;)
+    random_lb = RandomLoadBalancer(servers)
+    simulate_requests(random_lb, 10)</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80a3-ab90-ffcc5063b024" class="bulleted-list"><li style="list-style-type:disc"><code>&quot;\n&quot;</code> → blank line for spacing in output</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8029-bd22-ce656de42dbc" class="bulleted-list"><li style="list-style-type:disc">Creates a <strong>Random</strong> load balancer object</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80c8-ac83-d26b07cf037a" class="bulleted-list"><li style="list-style-type:disc">Simulates <strong>10 requests</strong> through it</li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-806d-aec7-f7836e558484"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-80d4-9ccd-d143f619db09" class="">📊 Expected Output</h2></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8093-8618-e54d722a7fe3" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">Round Robin Load Balancing:
+Request 1 routed to Server1
+Request 2 routed to Server2
+Request 3 routed to Server3
+Request 4 routed to Server1   ← predictable pattern
+Request 5 routed to Server2
+Request 6 routed to Server3
+Request 7 routed to Server1
+Request 8 routed to Server2
+Request 9 routed to Server3
+Request 10 routed to Server1
+
+Random Load Balancing:
+Request 1 routed to Server2
+Request 2 routed to Server2   ← same server, that&#x27;s random!
+Request 3 routed to Server1
+Request 4 routed to Server3
+Request 5 routed to Server1
+Request 6 routed to Server1
+Request 7 routed to Server3
+Request 8 routed to Server2
+Request 9 routed to Server1
+Request 10 routed to Server3</code></pre></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-806a-af9d-d1dd407cc075"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-80da-ab8b-c14a6bbda708" class="">⚔️ Round Robin vs Random — Comparison</h2></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-8059-b95a-fae9588e1caf" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-807e-84aa-c94d8f29e3b7"><th id="w@Mr" class="simple-table-header-color simple-table-header">Feature</th><th id="VuFq" class="simple-table-header-color simple-table-header">Round Robin</th><th id="oeu&gt;" class="simple-table-header-color simple-table-header">Random</th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80ed-9435-db7f6585ff80"><td id="w@Mr" class="">Pattern</td><td id="VuFq" class="">Predictable (1,2,3,1,2,3...)</td><td id="oeu&gt;" class="">Unpredictable</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80ab-9513-ec04850c4387"><td id="w@Mr" class="">Fairness</td><td id="VuFq" class=""><strong>Perfectly equal</strong> distribution</td><td id="oeu&gt;" class=""><strong>Usually equal</strong> (not guaranteed)</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-803a-9c59-ef5d162dcaae"><td id="w@Mr" class="">Memory needed</td><td id="VuFq" class="">Yes (tracks <code>current_index</code>)</td><td id="oeu&gt;" class="">No memory needed</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8062-b4a4-fcbdcf5ff1d2"><td id="w@Mr" class="">Code complexity</td><td id="VuFq" class="">Slightly complex</td><td id="oeu&gt;" class="">Very simple</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8078-a61f-ee5c0ef96f22"><td id="w@Mr" class="">Best for</td><td id="VuFq" class="">Equal, identical servers</td><td id="oeu&gt;" class="">Quick simple setups</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-806d-ba29-e3edfca75a70"><td id="w@Mr" class="">Risk</td><td id="VuFq" class="">None</td><td id="oeu&gt;" class="">One server might get overloaded</td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8062-99eb-ecc0f8185a4d"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-80ad-869e-e40b6db96240" class="">🧠 Master Summary Table</h2></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-8020-a4cf-e0ea2af9fb12" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-806b-b447-c59aaba34a18"><th id="HLfm" class="simple-table-header-color simple-table-header">Term</th><th id="Oa:o" class="simple-table-header-color simple-table-header">Simple Meaning</th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8017-a18a-cf3b0b6a35df"><td id="HLfm" class=""><code>Load Balancer</code></td><td id="Oa:o" class="">Manager that distributes requests fairly among servers</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80ac-9340-d4c1f765a50e"><td id="HLfm" class=""><code>Round Robin</code></td><td id="Oa:o" class="">Take turns in fixed order, wrap around at end</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80e7-8680-e4a01013d3f4"><td id="HLfm" class=""><code>current_index</code></td><td id="Oa:o" class="">Pointer tracking whose turn it is</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8066-855d-fa145f0fcc25"><td id="HLfm" class=""><code>% (modulo)</code></td><td id="Oa:o" class="">Remainder operator — used to wrap index back to 0</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8046-9864-f1fdd81eacb6"><td id="HLfm" class=""><code>random.choice()</code></td><td id="Oa:o" class="">Pick one random item from a list</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8034-93a6-f803d808919f"><td id="HLfm" class=""><code>__init__</code></td><td id="Oa:o" class="">Constructor — runs when object is first created</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8048-8492-f8e22f22b43d"><td id="HLfm" class=""><code>self</code></td><td id="Oa:o" class="">Refers to the current object</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8059-a6c9-e017c3931c93"><td id="HLfm" class=""><code>simulate_requests()</code></td><td id="Oa:o" class="">Test function that sends fake requests through balancer</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-804d-ac33-d6da7b5227be"><td id="HLfm" class=""><code>f-string</code></td><td id="Oa:o" class="">String with <code>{}</code> placeholders for variable values</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80cf-a338-e4d706090b15"><td id="HLfm" class=""><code>if __name__ == &quot;__main__&quot;</code></td><td id="Oa:o" class="">&quot;Only run this if I&#x27;m the main file&quot;</td></tr></div></tbody></table></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

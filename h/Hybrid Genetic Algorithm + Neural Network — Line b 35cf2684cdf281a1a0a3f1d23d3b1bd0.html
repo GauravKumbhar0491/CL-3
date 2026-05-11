@@ -1,0 +1,743 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Hybrid Genetic Algorithm + Neural Network — Line by Line Explanation</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="35cf2684-cdf2-81a1-a0a3-f1d23d3b1bd0" class="page sans"><header><h1 class="page-title" dir="auto">Hybrid Genetic Algorithm + Neural Network — Line by Line Explanation</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-81b8-85a2-e265efed5568" class=""><mark class="highlight-default">I&#x27;ll explain this code in very simple language. Think of it like this: We are trying to build a &quot;brain&quot; (Neural Network) that can identify flower types. But the brain has some settings (knobs) that we need to tune. Instead of guessing those settings, we use a </mark><mark class="highlight-default"><strong>Genetic Algorithm (GA)</strong></mark><mark class="highlight-default"> — which works like </mark><em><mark class="highlight-default">natural evolution</mark></em><mark class="highlight-default"> — to find the best settings automatically.</mark></p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8108-ac66-ca80abf27a0f"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-810e-b18c-c9f044fba35b" class=""><mark class="highlight-default">🌱 Big Picture First</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81c0-b6a3-d016b242d5f6" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><strong>Neural Network (NN)</strong></mark><mark class="highlight-default"> = A computer model that learns patterns (like a mini brain).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81f1-8e6e-d2d8ae4254df" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><strong>Genetic Algorithm (GA)</strong></mark><mark class="highlight-default"> = A search method inspired by Darwin&#x27;s evolution — &quot;survival of the fittest.&quot; It creates many random solutions, picks the best, mixes them, mutates them, and repeats until the best solution emerges.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-817b-a519-c5f433330611" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><strong>Hybrid GA-NN</strong></mark><mark class="highlight-default"> = Using GA to find the best settings for the NN.</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8195-8a3e-c9bd25d73668"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-818f-ba29-f46c55c5c44b" class=""><mark class="highlight-default">📦 Section 1: Importing Libraries</mark></h2></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-812c-a068-f7519688d598" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81c4-b59b-ca3e294993af"><th id="&gt;Vvd" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Word</mark></th><th id="Qz~O" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Meaning</mark></th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8168-9256-dc9d23900b1e"><td id="&gt;Vvd" class=""><mark class="highlight-default"><code>random</code></mark></td><td id="Qz~O" class=""><mark class="highlight-default">Python&#x27;s built-in library to generate random numbers.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-810c-8ca0-c3715d27e02a"><td id="&gt;Vvd" class=""><mark class="highlight-default"><code>numpy</code></mark><mark class="highlight-default"> (np)</mark></td><td id="Qz~O" class=""><mark class="highlight-default">Library for fast math operations on arrays/numbers.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81f2-81a9-cab287eb92ab"><td id="&gt;Vvd" class=""><mark class="highlight-default"><code>deap</code></mark></td><td id="Qz~O" class=""><mark class="highlight-default"><strong>D</strong></mark><mark class="highlight-default">istributed </mark><mark class="highlight-default"><strong>E</strong></mark><mark class="highlight-default">volutionary </mark><mark class="highlight-default"><strong>A</strong></mark><mark class="highlight-default">lgorithms in </mark><mark class="highlight-default"><strong>P</strong></mark><mark class="highlight-default">ython — the library that gives us tools for Genetic Algorithms.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-817f-b083-c5d2b47b760c"><td id="&gt;Vvd" class=""><mark class="highlight-default"><code>base</code></mark></td><td id="Qz~O" class=""><mark class="highlight-default">Foundation classes of DEAP (like Toolbox).</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81aa-b81b-f0291226005d"><td id="&gt;Vvd" class=""><mark class="highlight-default"><code>creator</code></mark></td><td id="Qz~O" class=""><mark class="highlight-default">Used to </mark><mark class="highlight-default"><em>create</em></mark><mark class="highlight-default"> custom classes like &quot;Individual&quot; and &quot;Fitness&quot;.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81b0-a905-cf31493960b5"><td id="&gt;Vvd" class=""><mark class="highlight-default"><code>tools</code></mark></td><td id="Qz~O" class=""><mark class="highlight-default">Has ready-made GA operations (selection, crossover, mutation).</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-814a-8d2d-f17703841c10"><td id="&gt;Vvd" class=""><mark class="highlight-default"><code>algorithms</code></mark></td><td id="Qz~O" class=""><mark class="highlight-default">Has ready-made GA loops like </mark><mark class="highlight-default"><code>eaSimple</code></mark><mark class="highlight-default">.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-819f-87f4-d0dc3b297f82"><td id="&gt;Vvd" class=""><mark class="highlight-default"><code>MLPClassifier</code></mark></td><td id="Qz~O" class=""><mark class="highlight-default"><strong>M</strong></mark><mark class="highlight-default">ulti-</mark><mark class="highlight-default"><strong>L</strong></mark><mark class="highlight-default">ayer </mark><mark class="highlight-default"><strong>P</strong></mark><mark class="highlight-default">erceptron — a type of Neural Network used for classification.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8161-b85b-c43774ac3dde"><td id="&gt;Vvd" class=""><mark class="highlight-default"><code>MinMaxScaler</code></mark></td><td id="Qz~O" class=""><mark class="highlight-default">Scales/normalizes data so all values lie between 0 and 1.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8150-bdf5-d01b90ed8ded"><td id="&gt;Vvd" class=""><mark class="highlight-default"><code>load_iris</code></mark></td><td id="Qz~O" class=""><mark class="highlight-default">Loads the famous Iris flower dataset.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-810c-8456-d7802a639e33"><td id="&gt;Vvd" class=""><mark class="highlight-default"><code>train_test_split</code></mark></td><td id="Qz~O" class=""><mark class="highlight-default">Splits data into training set and testing set.</mark></td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-81c9-b58f-d9abe030e110"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8120-a0f6-fc50853ecb27" class=""><mark class="highlight-default">🌸 Section 2: Loading the Iris Dataset</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8169-bd78-c976a52839b9" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><strong>Iris dataset</strong></mark><mark class="highlight-default"> = A famous dataset with 150 flowers belonging to 3 species (Setosa, Versicolor, Virginica).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-812c-bf21-c2b651d47eae" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>X</code></mark><mark class="highlight-default"> = </mark><mark class="highlight-default"><strong>Features</strong></mark><mark class="highlight-default"> (inputs) → sepal length, sepal width, petal length, petal width (4 numbers per flower).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81f8-ba78-e25faadc2d59" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>y</code></mark><mark class="highlight-default"> = </mark><mark class="highlight-default"><strong>Target</strong></mark><mark class="highlight-default"> (output) → 0, 1, or 2 (the flower species).</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8169-a9e6-d5ee1657332d"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-81e2-927d-eed3dc69551a" class=""><mark class="highlight-default">⚖️ Section 3: Normalization</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-813c-ae49-cc83b7e090df" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><strong>Normalize</strong></mark><mark class="highlight-default"> = squeezing all values into the range </mark><mark class="highlight-default"><strong>[0, 1]</strong></mark><mark class="highlight-default">.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8115-8495-f69a641853fd" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Why? Because Neural Networks learn better when all input numbers are on the same scale (e.g., 5.1 cm and 0.2 cm should not have unequal influence just due to size).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8158-b560-e52f36ccc768" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>fit_transform</code></mark><mark class="highlight-default"> = first </mark><em><mark class="highlight-default">learns</mark></em><mark class="highlight-default"> the min and max values, then </mark><em><mark class="highlight-default">transforms</mark></em><mark class="highlight-default"> the data.</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-818b-96b0-c505c94c4752"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-811f-87e3-c3426d07f2e1" class=""><mark class="highlight-default">✂️ Section 4: Train-Test Split</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8128-b851-c2ba3f025b82" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Splits data: </mark><mark class="highlight-default"><strong>80% for training</strong></mark><mark class="highlight-default">, </mark><mark class="highlight-default"><strong>20% for testing</strong></mark><mark class="highlight-default">.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8118-ae74-f4f8c3b26423" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>random_state=1</code></mark><mark class="highlight-default"> = a fixed seed so the split is the same every time (reproducible results).</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-813f-95df-f88c8474f0ce"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8185-b8f2-db4cd05d2156" class=""><mark class="highlight-default">🧬 Section 5: GA Setup with DEAP</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8114-91e0-f323fdf077e5" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>FitnessMax</code></mark><mark class="highlight-default"> = We tell DEAP we want to </mark><mark class="highlight-default"><strong>maximize</strong></mark><mark class="highlight-default"> fitness (higher score = better). The </mark><mark class="highlight-default"><code>1.0</code></mark><mark class="highlight-default"> weight means &quot;maximize.&quot; If it were </mark><mark class="highlight-default"><code>-1.0</code></mark><mark class="highlight-default">, it would minimize.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81a7-b5a3-c96484a77399" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>Individual</code></mark><mark class="highlight-default"> = One candidate solution. It&#x27;s a Python </mark><em><mark class="highlight-default">list</mark></em><mark class="highlight-default"> (e.g., </mark><mark class="highlight-default"><code>[10, 0.01, 0.001]</code></mark><mark class="highlight-default">) and it has a fitness attached to it.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81a0-af8e-e0710ec8c17e" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><strong>Toolbox</strong></mark><mark class="highlight-default"> = A container where we register all the GA functions (like recipes in a cookbook).</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8143-9673-f5b7b36c69fa"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8145-9455-f623b6905c99" class=""><mark class="highlight-default">🧪 Section 6: Defining Genes (Attributes)</mark></h2></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-816a-83d6-c8b230125ee2" class=""><mark class="highlight-default">Each individual has </mark><mark class="highlight-default"><strong>3 genes</strong></mark><mark class="highlight-default"> (3 settings for the neural network):</mark></p></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-81e9-b123-e9ddba81297d" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-812a-8a5d-e742a108e68c"><th id="Z]Te" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Gene</mark></th><th id="IWYK" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Meaning</mark></th><th id="tX:_" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Range</mark></th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81e8-9318-dc9b221d77ee"><td id="Z]Te" class=""><mark class="highlight-default"><code>attr_hidden</code></mark></td><td id="IWYK" class=""><mark class="highlight-default">Number of neurons in the hidden layer</mark></td><td id="tX:_" class=""><mark class="highlight-default">5 to 20 (integer)</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8169-9b9e-c35ffc3c5460"><td id="Z]Te" class=""><mark class="highlight-default"><code>attr_lr</code></mark></td><td id="IWYK" class=""><mark class="highlight-default">Learning rate — how fast the NN updates its weights</mark></td><td id="tX:_" class=""><mark class="highlight-default">0.001 to 0.1 (decimal)</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81c5-b20b-e5b9751d1e0c"><td id="Z]Te" class=""><mark class="highlight-default"><code>attr_alpha</code></mark></td><td id="IWYK" class=""><mark class="highlight-default">Regularization strength — prevents overfitting</mark></td><td id="tX:_" class=""><mark class="highlight-default">0.0001 to 0.01 (decimal)</mark></td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8138-8655-fd05f45ee371" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>random.randint</code></mark><mark class="highlight-default"> → random whole number.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8182-9a7c-f2f31e9eb6d5" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>random.uniform</code></mark><mark class="highlight-default"> → random decimal number.</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-813e-8a06-de626f2731d3"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8148-8a71-e86bb05b618c" class=""><mark class="highlight-default">👤 Section 7: Creating an Individual &amp; Population</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8199-87eb-c17419794973" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>initCycle</code></mark><mark class="highlight-default"> = cycles through the three attribute functions once (</mark><mark class="highlight-default"><code>n=1</code></mark><mark class="highlight-default">) to build one individual like </mark><mark class="highlight-default"><code>[12, 0.05, 0.003]</code></mark><mark class="highlight-default">.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81ac-935e-da0f36e6dcd3" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>population</code></mark><mark class="highlight-default"> = a list of many individuals. </mark><mark class="highlight-default"><code>initRepeat</code></mark><mark class="highlight-default"> repeats </mark><mark class="highlight-default"><code>individual</code></mark><mark class="highlight-default"> creation many times.</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-81fd-a8ea-e3d73f98ac82"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8182-b83e-ef081cab2fa0" class=""><mark class="highlight-default">🎯 Section 8: Fitness Function (The Most Important Part)</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8137-8fba-c8db7d9edbc1" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">This function </mark><em><mark class="highlight-default">grades</mark></em><mark class="highlight-default"> an individual.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8164-988c-f747810df31b" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>round()</code></mark><mark class="highlight-default"> rounds the hidden neurons to integer (since you can&#x27;t have 7.3 neurons!).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81b6-9cff-dea17e0d7d76" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>max(...)</code></mark><mark class="highlight-default"> and </mark><mark class="highlight-default"><code>min(...)</code></mark><mark class="highlight-default"> clamp values into safe ranges so mutation doesn&#x27;t push them into invalid territory (e.g., negative learning rate).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8141-8cdd-d58a4e6b396e" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Builds a </mark><mark class="highlight-default"><strong>Neural Network</strong></mark><mark class="highlight-default"> with these settings.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8124-8aa1-eb68dc459c47" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>hidden_layer_sizes=(hidden,)</code></mark><mark class="highlight-default"> → one hidden layer with that many neurons.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81e9-aecf-efacbe24950e" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>max_iter=1000</code></mark><mark class="highlight-default"> → train for up to 1000 iterations.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81ab-b21a-c7e28b276d32" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>fit</code></mark><mark class="highlight-default"> → train the NN on training data.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-819c-b6f0-f1f562495af2" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>score</code></mark><mark class="highlight-default"> → accuracy on test data (between 0 and 1).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-815b-bf0b-f315d850dcab" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Returns a </mark><mark class="highlight-default"><strong>tuple</strong></mark><mark class="highlight-default"><code>(score,)</code></mark><mark class="highlight-default"> — DEAP requires fitness as a tuple even if it has just one value.</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-815b-8f30-d62b09d6ce48"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-81db-b32f-cfb5affb4956" class=""><mark class="highlight-default">🛠️ Section 9: Registering GA Operators</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81ef-9573-f47e5ed799c4" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>mate</code></mark><mark class="highlight-default"> = </mark><mark class="highlight-default"><strong>Crossover</strong></mark><mark class="highlight-default"> (mixing two parents to create children).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-817d-8867-f0f278807df3" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>cxTwoPoint</code></mark><mark class="highlight-default"> = &quot;Two-point crossover&quot; → picks 2 cut points in the gene list and swaps the middle section between two parents. Like mixing DNA.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81b7-ab45-e2a40a9442c2" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>mutate</code></mark><mark class="highlight-default"> = </mark><mark class="highlight-default"><strong>Mutation</strong></mark><mark class="highlight-default"> (random small change in genes — like a DNA copy error).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8126-be2d-c1d4805b36d9" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>mutGaussian</code></mark><mark class="highlight-default"> → adds a random number from a Gaussian (bell curve) distribution.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81d4-8ea8-eec719705782" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>mu=0</code></mark><mark class="highlight-default"> → mean of the noise is 0.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81c6-ba8c-c0cf66cf38a8" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>sigma=0.1</code></mark><mark class="highlight-default"> → standard deviation = 0.1 (size of the random nudge).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81a3-809e-f62d2a686e84" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>indpb=0.2</code></mark><mark class="highlight-default"> → each gene has a 20% chance of being mutated.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81e9-8c7e-e5d403083f2e" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>select</code></mark><mark class="highlight-default"> = </mark><mark class="highlight-default"><strong>Selection</strong></mark><mark class="highlight-default"> of who survives to reproduce.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-814d-b3ad-cc5d97734c38" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>selTournament</code></mark><mark class="highlight-default"> → pick 3 random individuals, the best one wins. Repeat to fill the next generation. This is called &quot;tournament selection.&quot;</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8168-85ee-c133c43a9d8b"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-81b6-8bcb-ef974db5f28c" class=""><mark class="highlight-default">🚀 Section 10: Running the GA</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-819a-a827-facc8ee08e53" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Creates an initial population of </mark><mark class="highlight-default"><strong>20 random individuals</strong></mark><mark class="highlight-default">.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81e4-9e1a-fb05e322f41b" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>eaSimple</code></mark><mark class="highlight-default"> = </mark><mark class="highlight-default"><strong>Evolutionary Algorithm Simple</strong></mark><mark class="highlight-default"> → the standard GA loop:</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-811b-843d-ef72e8020d67" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Evaluate everyone.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8185-815c-c7309b045d75" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Select parents.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81ec-99dc-da305f3ba589" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Crossover &amp; mutate to make children.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81a5-91d5-dc731fbfab7f" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Replace old population.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-812b-9896-c979086bafce" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Repeat for </mark><mark class="highlight-default"><code>ngen</code></mark><mark class="highlight-default"> generations.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-815a-bc8a-d4af99758b62" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>cxpb=0.7</code></mark><mark class="highlight-default"> → 70% chance two selected parents will crossover.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81de-8316-da220b379d42" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>mutpb=0.2</code></mark><mark class="highlight-default"> → 20% chance an individual will be mutated.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-817b-a573-d12dc0c16fa8" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>ngen=50</code></mark><mark class="highlight-default"> → run for 50 generations.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8173-8849-f56ce31812f4" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>verbose=False</code></mark><mark class="highlight-default"> → don&#x27;t print logs every generation.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81ce-bd43-f3bd0018db48" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">After 50 generations, pick the </mark><mark class="highlight-default"><strong>best individual</strong></mark><mark class="highlight-default"> (highest accuracy).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8177-86a2-dbab0e70e413" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Print the winning settings.</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-81aa-84fc-eb84a2fff740"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8166-9fa9-dd6231b2a5d8" class=""><mark class="highlight-default">🏁 Section 11: Building the Final Model</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-811f-9b10-ea758caabe89" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Take the best parameters found by the GA, build the </mark><mark class="highlight-default"><strong>final neural network</strong></mark><mark class="highlight-default">, and train it.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8199-88e8-f38790937b4a" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Use the trained network to predict the flower species for test data.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-818c-b202-f50cadc58949" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Print actual vs predicted for the first 10 test samples to compare.</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-81b6-bd21-dcbc3a97d067"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-815d-bd39-dd1383e4c1e7" class=""><mark class="highlight-default">🧠 Quick Recap Cheat Sheet</mark></h2></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-81ae-b131-fe7df3f164a8" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-810e-8b74-f2484e112e92"><th id="\_:F" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Concept</mark></th><th id="kVJ=" class="simple-table-header-color simple-table-header"><mark class="highlight-default">One-line meaning</mark></th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-813e-886c-d886596ecfe7"><td id="\_:F" class=""><mark class="highlight-default"><strong>Gene</strong></mark></td><td id="kVJ=" class=""><mark class="highlight-default">One setting (e.g., learning rate)</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81cf-8b9e-f961c25f7539"><td id="\_:F" class=""><mark class="highlight-default"><strong>Individual</strong></mark></td><td id="kVJ=" class=""><mark class="highlight-default">One complete solution (a list of genes)</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8114-b99e-e25c9f7af6af"><td id="\_:F" class=""><mark class="highlight-default"><strong>Population</strong></mark></td><td id="kVJ=" class=""><mark class="highlight-default">Many individuals</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8188-a05e-d202e284a4cb"><td id="\_:F" class=""><mark class="highlight-default"><strong>Fitness</strong></mark></td><td id="kVJ=" class=""><mark class="highlight-default">How good an individual is (here: test accuracy)</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8161-b7c4-ca79d80ff0f4"><td id="\_:F" class=""><mark class="highlight-default"><strong>Selection</strong></mark></td><td id="kVJ=" class=""><mark class="highlight-default">Pick the best individuals</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-814f-b886-cf0901a92510"><td id="\_:F" class=""><mark class="highlight-default"><strong>Crossover</strong></mark></td><td id="kVJ=" class=""><mark class="highlight-default">Mix two parents to make a child</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8174-b56d-d61a666ed4b4"><td id="\_:F" class=""><mark class="highlight-default"><strong>Mutation</strong></mark></td><td id="kVJ=" class=""><mark class="highlight-default">Random small change in a child</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8168-9134-e129dbc99d00"><td id="\_:F" class=""><mark class="highlight-default"><strong>Generation</strong></mark></td><td id="kVJ=" class=""><mark class="highlight-default">One full cycle of select → crossover → mutate</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8138-8573-c7c04ca87a95"><td id="\_:F" class=""><mark class="highlight-default"><strong>GA Goal</strong></mark></td><td id="kVJ=" class=""><mark class="highlight-default">Find the best NN settings automatically</mark></td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8192-8f1b-ebb2e3492dec"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8189-8de7-d9358b185b2e" class=""><mark class="highlight-default">✨ Why Is It Called &quot;Hybrid&quot;?</mark></h2></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-81e0-a96a-c390cf134764" class=""><mark class="highlight-default">Because two techniques work together:<br/><br/>1. </mark><mark class="highlight-default"><strong>Neural Network</strong></mark><mark class="highlight-default"> does the actual classification (learning to recognize flowers).<br/><br/>2. </mark><mark class="highlight-default"><strong>Genetic Algorithm</strong></mark><mark class="highlight-default"> searches for the best hyperparameters (knobs) for that neural network.</mark></p></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8178-8aef-edb4002169c6" class=""><mark class="highlight-default">Alone, you would manually guess settings like hidden neurons = 10, lr = 0.01. The GA does this guessing automatically and intelligently through evolution — saving time and giving better accuracy.</mark></p></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8151-9810-ebbd8908c161" class=""><mark class="highlight-default">If you want, I can also explain how to </mark><mark class="highlight-default"><strong>visualize the evolution</strong></mark><mark class="highlight-default"> (fitness curve over generations) or </mark><mark class="highlight-default"><strong>add more genes</strong></mark><mark class="highlight-default"> (like number of hidden layers). Just let me know!</mark></p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

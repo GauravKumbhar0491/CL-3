@@ -1,0 +1,814 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>Ant Colony Optimization (ACO) </title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="35cf2684-cdf2-8062-8dd0-c6a5e535a98e" class="page sans"><header><h1 class="page-title" dir="auto">Ant Colony Optimization (ACO) </h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8083-b7b9-c9b9e6fda87c" class="">Let me break down this Ant Colony Optimization (ACO) code in very simple language, section by section.</p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-806c-8fe7-fed25e05a944"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8067-8c7d-edd8bb016e49" class="">🐜 What is Ant Colony Optimization?</h2></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-800f-80b4-c4c70c298fcd" class="">Imagine real ants searching for food. They leave <strong>pheromone trails</strong> on paths they walk. Other ants follow stronger pheromone trails (shorter, better paths). Over time, the best path gets reinforced. ACO mimics this behavior to solve optimization problems.</p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80c6-8567-cb789cadd313"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-80ec-be58-cfdb0a765586" class="">📦 Imports</h2></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" integrity="sha512-AKaNmg8COK0zEbjTdMHJAPJ0z6VeNqvRvH4/d5M4sHJbQQUToMBtodq4HaV4fa+WV2UTfoperElm66c9/8cKmQ==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><pre id="35cf2684-cdf2-809a-807c-ed31a99f7152" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">import numpy as np
+import random</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8020-a372-ee90138c5388" class="bulleted-list"><li style="list-style-type:disc"><code>numpy</code> → used for arrays and matrix math</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8011-ad86-c6c8b2b96700" class="bulleted-list"><li style="list-style-type:disc"><code>random</code> → used to make random choices (like an ant randomly picking a starting city)</li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80b8-8004-edafbcf24bf4"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-804b-acfd-d16e3bc48ae7" class="">🗺️ Distance Matrix</h2></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-806a-8f72-cd351e525881" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">dist = np.array([
+    [0, 2, 2, 5, 7],
+    [2, 0, 4, 8, 2],
+    [2, 4, 0, 1, 3],
+    [5, 8, 1, 0, 2],
+    [7, 2, 3, 2, 0]
+])</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-80c3-bcb1-f366103f9191" class="">This is a <strong>5×5 table</strong> showing distances between 5 cities (A, B, C, D, E).</p></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8082-aca3-fd6d4aeb7721" class="bulleted-list"><li style="list-style-type:disc"><code>dist[0][1] = 2</code> → distance from City A to City B is <strong>2</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8091-ad81-d43f2504995e" class="bulleted-list"><li style="list-style-type:disc"><code>dist[0][0] = 0</code> → distance from City A to itself is <strong>0</strong> (diagonal is always 0)</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-800d-b045-e46385c18ceb" class="bulleted-list"><li style="list-style-type:disc">The matrix is <strong>symmetric</strong> → A→B = B→A = 2</li></ul></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8054-8697-c3304506f084" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">     A  B  C  D  E
+A  [ 0, 2, 2, 5, 7 ]
+B  [ 2, 0, 4, 8, 2 ]
+C  [ 2, 4, 0, 1, 3 ]
+D  [ 5, 8, 1, 0, 2 ]
+E  [ 7, 2, 3, 2, 0 ]</code></pre></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8097-bbad-dbf64e6a4050"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8027-985a-d947befcf75a" class="">🧪 Parameters</h2></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80d1-aa41-f261aee3cc27" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">n = len(dist)          # n = 5 (number of cities)
+pheromone = np.ones((n, n))  # 5x5 matrix filled with 1s</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80ab-bf58-f7afa5d7c619" class="bulleted-list"><li style="list-style-type:disc"><code>n</code> → total number of cities = 5</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8039-9d93-dadcc561a1de" class="bulleted-list"><li style="list-style-type:disc"><code>pheromone</code> → tracks how much pheromone is on each path. Starts at <strong>1</strong> everywhere (equal chance for all paths initially)</li></ul></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8079-89df-ea037de5ec01" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">alpha = 1      # how much ants care about pheromone
+beta = 1       # how much ants care about distance
+evaporation = 0.5   # how fast pheromone fades (50% fades each round)
+Q = 100        # reward amount — how much pheromone a good route gets</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-802c-8bfd-dcd2cb81f7be" class="bulleted-list"><li style="list-style-type:disc"><strong>High alpha</strong> → ants follow pheromone more (trust other ants)</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-809b-9e4d-c6d75b809588" class="bulleted-list"><li style="list-style-type:disc"><strong>High beta</strong> → ants prefer shorter distances (be logical)</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-809f-8e0c-eed0aabb2969" class="bulleted-list"><li style="list-style-type:disc"><strong>Evaporation = 0.5</strong> → after each round, 50% of all pheromone disappears (prevents old bad routes from dominating forever)</li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8080-99cb-e29932971c4d"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-800e-a5e7-d449aa7f0a28" class="">📏 <code>route_length()</code> Function</h2></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8093-b05d-f2c079985080" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">def route_length(route):
+    return sum(
+        dist[route[i]][route[i+1]]
+        for i in range(len(route)-1)
+    ) + dist[route[-1]][route[0]]</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8056-a46a-fde333f6611b" class="">Calculates the <strong>total distance</strong> of a route (including return to start).</p></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8016-8e39-e24782e0163c" class=""><strong>Example:</strong> If route = [0, 2, 3, 4, 1] (A→C→D→E→B→back to A)</p></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80d1-a8c2-f6f526eed47d" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">dist[0][2] + dist[2][3] + dist[3][4] + dist[4][1] + dist[1][0]
+=    2     +     1      +     2      +     2      +     2      = 9</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-800f-8ac3-e397a2f34003" class="bulleted-list"><li style="list-style-type:disc"><code>route[i]</code> → current city</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-805a-b0bb-db9cee5cd069" class="bulleted-list"><li style="list-style-type:disc"><code>route[i+1]</code> → next city</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8062-9cb7-f690ba48535d" class="bulleted-list"><li style="list-style-type:disc"><code>dist[route[-1]][route[0]]</code> → return trip: last city back to first city</li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80cd-aaf3-e4f31e1b805c"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8037-bc63-eb774e239afb" class="">🧭 <code>choose_next()</code> Function</h2></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8045-9ad0-ef27ba501e9e" class="">This is the <strong>brain of each ant</strong> — how it decides where to go next.</p></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80f6-8bea-f76b2a65b70d" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">def choose_next(city, visited):</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-808e-b00e-c3a77fd9fd03" class="bulleted-list"><li style="list-style-type:disc"><code>city</code> → where the ant currently is</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80ca-82ff-d78317b74524" class="bulleted-list"><li style="list-style-type:disc"><code>visited</code> → list of cities already visited (can&#x27;t go there again)</li></ul></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8034-a479-ccf5a1cea945" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">    probs = []
+    for j in range(n):
+        if j not in visited:</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8044-a2bd-f7d8bfd068cd" class="">Loop through all cities. Skip already-visited ones.</p></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-808b-8043-d1d582326068" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">            tau = pheromone[city][j]**alpha</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80d8-b3c4-c6e271396c41" class="bulleted-list"><li style="list-style-type:disc"><code>tau</code> = pheromone level on the path from current city to city <code>j</code></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80f3-9792-d46216058a8d" class="bulleted-list"><li style="list-style-type:disc">Raised to power <code>alpha</code> (controls how much pheromone matters)</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8003-b384-e4e8503f7abf" class="bulleted-list"><li style="list-style-type:disc"><strong>High pheromone = more attractive path</strong></li></ul></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80d9-8301-f2ee22b53bf3" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">            if dist[city][j] != 0:
+                eta = (1 / dist[city][j])**beta
+            else:
+                eta = 0</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80f9-a671-f88b334a9a6c" class="bulleted-list"><li style="list-style-type:disc"><code>eta</code> = <strong>heuristic value</strong> = 1/distance</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-807a-bec1-d0f2f90ec67a" class="bulleted-list"><li style="list-style-type:disc">Shorter distance → bigger eta → more attractive</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8008-bbc6-c51f700263e3" class="bulleted-list"><li style="list-style-type:disc">If distance is 0 (same city), eta = 0 (ignore it)</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8090-8eb4-f01de93d3282" class="bulleted-list"><li style="list-style-type:disc">Raised to power <code>beta</code> (controls how much distance matters)</li></ul></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80eb-a6f1-ea120c933eed" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">            probs.append((j, tau*eta))</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-80b6-a3ec-f24d007152da" class="">Attractiveness of city <code>j</code> = pheromone × heuristic (<code>tau × eta</code>)</p></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80dd-b1d9-ef03330aa862" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">    total = sum(p for _, p in probs)
+    r = random.random()   # random number between 0 and 1
+    s = 0
+    for j, p in probs:
+        s += p / total    # convert to probability (0 to 1)
+        if r &lt;= s:
+            return j      # choose this city</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-80c5-a927-c0943e4ce104" class="">This is <strong>Roulette Wheel Selection</strong>:</p></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8004-a812-f99ec70ce056" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">Cities:      B        D        E
+Attraction:  3        1        6     → Total = 10
+Probability: 30%      10%      60%
+
+[----B(30%)----][--D(10%)--][-------E(60%)-------]
+0              0.3         0.4                    1.0
+         ↑
+     r = 0.25  → picks B</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8073-bce2-f8594f4a71b5" class="">A random number <code>r</code> lands somewhere on this wheel. Better cities have bigger slices → more likely to be picked, but not guaranteed.</p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80b5-8588-f61ed1dc1f61"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-80ec-a83b-e6909db52511" class="">🐜 <code>aco()</code> — Main ACO Function</h2></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8081-9888-d5dae5ea8a2e" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">def aco(iterations=50, ants=10):</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8012-ab16-edbaac9a174a" class="bulleted-list"><li style="list-style-type:disc">Run <strong>50 rounds</strong> (iterations)</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80ab-836f-f552c8113051" class="bulleted-list"><li style="list-style-type:disc">Each round, <strong>10 ants</strong> build routes</li></ul></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80ce-a163-ed67d7fccc51" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">    best_route = None
+    best_length = float(&#x27;inf&#x27;)  # infinity — any real route will be better</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-802a-98bd-cdf6404e670b" class="">Track the best route found so far.</p></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8077-98e9-d6026d1862bc" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">    for _ in range(iterations):       # repeat 50 times
+        all_routes = []
+
+        for _ in range(ants):         # send out 10 ants
+            route = [random.randint(0, n-1)]   # ant starts at a random city</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-80b7-b53e-fab8d4e5d95a" class="">Each ant starts at a <strong>random city</strong> (0 to 4).</p></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-805f-8191-f3b6b5c5320c" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">            while len(route) &lt; n:    # keep going until all cities visited
+                next_city = choose_next(route[-1], route)
+                route.append(next_city)</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-80f3-8602-fc74a5ad09b9" class="">Ant keeps choosing the next unvisited city using <code>choose_next()</code>, until all 5 cities are in the route.</p></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80f0-8f65-cf69dc847748" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">            all_routes.append(route)
+            length = route_length(route)
+
+            if length &lt; best_length:
+                best_length = length
+                best_route = route</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8094-b854-dc9431897acb" class="">Save the route. If it&#x27;s the shortest so far, update our best.</p></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8039-8683-c25be03204a2" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">        # Evaporation
+        pheromone[:] *= (1 - evaporation)   # = pheromone * 0.5</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-80d9-a1d9-c193c5cb2876" class=""><strong>All pheromone fades by 50%.</strong> This prevents stagnation — old bad paths lose their influence over time.</p></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80f1-a405-f19b2111a8b8" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">        # Pheromone update
+        for route in all_routes:
+            lenght = route_length(route)    # ⚠️ typo: &#x27;lenght&#x27; instead of &#x27;length&#x27;
+            for i in range(n-1):
+                pheromone[route[i]][route[i+1]] += Q / length   # ⚠️ uses outer &#x27;length&#x27;, not &#x27;lenght&#x27;</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-801c-abb6-f9751374f6fe" class=""><strong>Reward good routes with more pheromone:</strong></p></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-806d-afb3-ea4cb20cb88e" class="bulleted-list"><li style="list-style-type:disc"><code>Q / length</code> → shorter route = <strong>more pheromone deposited</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80bf-9d25-eb4e4f36262c" class="bulleted-list"><li style="list-style-type:disc">Example: Route of length 10 → deposits 100/10 = <strong>10 units</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80fe-8fcc-cbab57348059" class="bulleted-list"><li style="list-style-type:disc">Example: Route of length 50 → deposits 100/50 = <strong>2 units</strong></li></ul></div><div style="display:contents" dir="auto"><blockquote id="35cf2684-cdf2-80a5-bab9-da98f622e8f2" class="">⚠️ <strong>Bug in original code:</strong> There&#x27;s a typo <code>lenght</code> (unused), and <code>Q/length</code> uses the variable from the outer loop (last ant&#x27;s length) instead of each route&#x27;s own length. Should be <code>Q/lenght</code> or fixed to <code>Q/route_length(route)</code>.</blockquote></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80ee-a804-e1adf939a23a"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8037-a867-e4f501673a63" class="">🏁 Output</h2></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8019-9cef-d0ff7b505fdd" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">route, length = aco()
+print(&quot;Best route:&quot;, route)        # e.g. [0, 2, 3, 4, 1]
+print(&quot;Shortest distance:&quot;, length) # e.g. 9</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8022-bfd2-d890614452c5" class="">Prints the best path found and its total distance.</p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8026-aba4-eaae887f4cf8"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8042-a1b7-f2662f0c1a47" class="">🔄 Full Flow Summary</h2></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80e4-b2a6-ebdbb73ea484" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">Start
+  │
+  ├── 50 Iterations
+  │     │
+  │     ├── 10 Ants each build a route
+  │     │     ├── Start at random city
+  │     │     ├── Pick next city using pheromone + distance
+  │     │     └── Repeat until all cities visited
+  │     │
+  │     ├── Track best route
+  │     ├── Evaporate all pheromone (×0.5)
+  │     └── Deposit pheromone on routes (Q/length)
+  │
+  └── Return best route &amp; distance</code></pre></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-806e-bfdf-d15f92b76a21"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-80a2-a26b-fcb916bce1cb" class="">🐛 Bugs to Fix</h2></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-80d7-af14-c4e71cc1970e" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8093-80d8-c92d31156fcb"><th id="qT]r" class="simple-table-header-color simple-table-header">#</th><th id="Exzm" class="simple-table-header-color simple-table-header">Bug</th><th id="tHrz" class="simple-table-header-color simple-table-header">Fix</th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80b5-8cdf-e638a00d671a"><td id="qT]r" class="">1</td><td id="Exzm" class="">Typo: <code>lenght</code> is calculated but never used</td><td id="tHrz" class="">Rename to <code>length</code> and use it in <code>Q/length</code></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80b8-a1f3-f6da5eb05432"><td id="qT]r" class="">2</td><td id="Exzm" class="">Pheromone only updated for edges <code>i → i+1</code>, missing the return edge (last → first)</td><td id="tHrz" class="">Add <code>pheromone[route[-1]][route[0]] += Q/length</code></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80f3-81f0-f0842810c8e7"><td id="qT]r" class="">3</td><td id="Exzm" class=""><code>choose_next()</code> can return <code>None</code> if probabilities fail</td><td id="tHrz" class="">Add a fallback return value</td></tr></div></tbody></table></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

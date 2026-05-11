@@ -1,0 +1,743 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>DEAP Evolutionary Algorithm — Line by Line Explanation</title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="35cf2684-cdf2-8138-9870-df48a0af2d2b" class="page sans"><header><h1 class="page-title" dir="auto">DEAP Evolutionary Algorithm — Line by Line Explanation</h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-81b4-8361-f9a28f9c1aec" class=""><mark class="highlight-default">I&#x27;ll explain this code in very simple language, just like before. Think of it like this: Imagine you are lost in a hilly area and want to find the </mark><mark class="highlight-default"><strong>lowest point</strong></mark><mark class="highlight-default"> (the deepest valley). You can&#x27;t see the whole map. So you send out </mark><mark class="highlight-default"><strong>50 explorers</strong></mark><mark class="highlight-default"> in random directions. After a while, you keep the best explorers (those who found lower ground), let them &quot;have children&quot; who explore nearby areas, occasionally let one wander off randomly (mutation), and repeat. Eventually, your explorers all gather at the lowest valley. 🏞️</mark></p></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-819e-a114-e90d63fcc76e" class=""><mark class="highlight-default">This is exactly what </mark><mark class="highlight-default"><strong>DEAP</strong></mark><mark class="highlight-default"> (Distributed Evolutionary Algorithms in Python) helps us do — but with numbers instead of explorers!</mark></p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8178-9a8e-fbefcfa5b081"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-81c7-9b32-d565f61b084b" class=""><mark class="highlight-default">🌱 Big Picture First</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81b1-875b-f7ca5148d0df" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><strong>Goal of this code</strong></mark><mark class="highlight-default">: Minimize the </mark><mark class="highlight-default"><strong>Sphere function</strong></mark><mark class="highlight-default"> → </mark><mark class="highlight-default"><code>f(x) = x₁² + x₂² + x₃² + ... + x₁₀²</code></mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81f9-a28f-dde8f0789764" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><strong>Correct answer</strong></mark><mark class="highlight-default">: All x values should be </mark><mark class="highlight-default"><strong>0</strong></mark><mark class="highlight-default">, giving the minimum fitness = </mark><mark class="highlight-default"><strong>0</strong></mark><mark class="highlight-default">.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-810d-a40c-f7170ed8256c" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><strong>DEAP</strong></mark><mark class="highlight-default"> is a Python library that gives us ready-made tools to build </mark><mark class="highlight-default"><strong>Evolutionary Algorithms</strong></mark><mark class="highlight-default"> (like Genetic Algorithms).</mark></li></ul></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-8134-9192-eca71fc827b7" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-810d-8040-cefaf0d8b3e7"><th id="GbI_" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Word</mark></th><th id="TOQb" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Meaning</mark></th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8196-9f54-cd1b39dbd0cd"><td id="GbI_" class=""><mark class="highlight-default"><strong>DEAP</strong></mark></td><td id="TOQb" class=""><mark class="highlight-default"><strong>D</strong></mark><mark class="highlight-default">istributed </mark><mark class="highlight-default"><strong>E</strong></mark><mark class="highlight-default">volutionary </mark><mark class="highlight-default"><strong>A</strong></mark><mark class="highlight-default">lgorithms in </mark><mark class="highlight-default"><strong>P</strong></mark><mark class="highlight-default">ython — a library for evolution-based optimization.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8194-8626-dee78d9f227f"><td id="GbI_" class=""><mark class="highlight-default"><strong>Sphere function</strong></mark></td><td id="TOQb" class=""><mark class="highlight-default">A simple test function shaped like a bowl. The bottom is at zero — the perfect place.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8113-a4f8-c52f61e49fd4"><td id="GbI_" class=""><mark class="highlight-default"><strong>Evolutionary Algorithm</strong></mark></td><td id="TOQb" class=""><mark class="highlight-default">An algorithm inspired by biological evolution (survival of the fittest).</mark></td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-81fa-b38c-c0a405ff1970"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-81b5-a82f-d7f926dbbb6e" class=""><mark class="highlight-default">📦 Section 1: Importing Libraries</mark></h2></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-819b-aece-d8f220f4e4db" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-814d-9577-fcd369c4ac23"><th id="Mixt" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Library</mark></th><th id="GqSS" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Meaning</mark></th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81b0-bf78-ddb4faa839da"><td id="Mixt" class=""><mark class="highlight-default"><code>random</code></mark></td><td id="GqSS" class=""><mark class="highlight-default">Built-in Python library to generate random numbers.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-814d-8118-c4fa09f8f887"><td id="Mixt" class=""><mark class="highlight-default"><code>numpy</code></mark><mark class="highlight-default"> (np)</mark></td><td id="GqSS" class=""><mark class="highlight-default">Library for fast math (used here for statistics like mean, std, min, max).</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81b6-80b3-e0703e93397f"><td id="Mixt" class=""><mark class="highlight-default"><code>base</code></mark></td><td id="GqSS" class=""><mark class="highlight-default">Foundation of DEAP — contains the </mark><mark class="highlight-default"><code>Toolbox</code></mark><mark class="highlight-default"> and </mark><mark class="highlight-default"><code>Fitness</code></mark><mark class="highlight-default"> classes.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81da-9d28-ff07ed4d6629"><td id="Mixt" class=""><mark class="highlight-default"><code>creator</code></mark></td><td id="GqSS" class=""><mark class="highlight-default">Lets us </mark><mark class="highlight-default"><em>create</em></mark><mark class="highlight-default"> custom classes like </mark><mark class="highlight-default"><code>Individual</code></mark><mark class="highlight-default"> and </mark><mark class="highlight-default"><code>Fitness</code></mark><mark class="highlight-default">.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81b4-bdbb-c67f8a2a49ef"><td id="Mixt" class=""><mark class="highlight-default"><code>tools</code></mark></td><td id="GqSS" class=""><mark class="highlight-default">Has ready-made GA operations (crossover, mutation, selection, statistics).</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-813f-9814-e1170f366a0b"><td id="Mixt" class=""><mark class="highlight-default"><code>algorithms</code></mark></td><td id="GqSS" class=""><mark class="highlight-default">Has ready-made evolution loops like </mark><mark class="highlight-default"><code>eaSimple</code></mark><mark class="highlight-default">.</mark></td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8113-8a51-f215c145c5df"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-813b-aace-da2399268d46" class=""><mark class="highlight-default">🎯 Section 2: The Objective (Evaluate) Function</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8108-ba3b-c432fa3a9388" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>individual</code></mark><mark class="highlight-default"> = a list of 10 numbers, e.g., </mark><mark class="highlight-default"><code>[1.2, -3.5, 0.7, 2.1, ..., -1.4]</code></mark><mark class="highlight-default">.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81b0-ade9-eb9e59af8bf4" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">For each number </mark><mark class="highlight-default"><code>x</code></mark><mark class="highlight-default">, calculate </mark><mark class="highlight-default"><code>x²</code></mark><mark class="highlight-default">, then add them all up.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8145-9fcb-d2ae220df0ec" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Example: if individual = </mark><mark class="highlight-default"><code>[1, 2, 3]</code></mark><mark class="highlight-default">, then fitness = </mark><mark class="highlight-default"><code>1² + 2² + 3² = 14</code></mark><mark class="highlight-default">.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81be-9505-db658c24430c" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><strong>Lower value = better</strong></mark><mark class="highlight-default"> (we want the sum of squares to be as small as possible).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-814e-ab95-f3bc15b989fa" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">⚠️ Notice the </mark><mark class="highlight-default"><strong>comma at the end</strong></mark><mark class="highlight-default"> → </mark><mark class="highlight-default"><code>return sum(...),</code></mark><mark class="highlight-default"> makes it a </mark><mark class="highlight-default"><strong>tuple</strong></mark><mark class="highlight-default">. DEAP </mark><em><mark class="highlight-default">requires</mark></em><mark class="highlight-default"> fitness to be a tuple (even if it has just one value), because some problems have multiple objectives.</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-81c6-939c-fdcb03970149"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-815d-b60a-c7fdd0d7a1a6" class=""><mark class="highlight-default">🏗️ Section 3: Creating Custom Classes</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8176-9e23-eaddaf12ce2d" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Creates a new class called </mark><mark class="highlight-default"><code>FitnessMin</code></mark><mark class="highlight-default">.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-819b-a9b9-de9a66b3841c" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>weights=(-1.0,)</code></mark><mark class="highlight-default"> → the </mark><mark class="highlight-default"><code>-1.0</code></mark><mark class="highlight-default"> tells DEAP we want to </mark><mark class="highlight-default"><strong>minimize</strong></mark><mark class="highlight-default"> fitness.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-819c-b94f-da0c83cbc1e1" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>+1.0</code></mark><mark class="highlight-default"> would mean </mark><mark class="highlight-default"><strong>maximize</strong></mark><mark class="highlight-default">.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8195-aae8-e8eb400da8ec" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">The comma </mark><mark class="highlight-default"><code>,</code></mark><mark class="highlight-default"> again makes it a tuple.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-819f-a819-fbc22a26e18d" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Creates an </mark><mark class="highlight-default"><code>Individual</code></mark><mark class="highlight-default"> class that behaves like a Python </mark><mark class="highlight-default"><strong>list</strong></mark><mark class="highlight-default"> but also has a fitness attached to it.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81d4-ac0b-fb52046fe30a" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">So an individual is a list of 10 numbers + a fitness score.</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8112-b5c9-e18063cde9a7"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-811b-9c7f-fbc0cc7284ac" class=""><mark class="highlight-default">🧰 Section 4: Initializing the Toolbox</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-815f-bbbf-c27248956ce9" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><strong>Toolbox</strong></mark><mark class="highlight-default"> = a container where we register all our GA functions (like a labeled drawer for each tool).</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-81fd-9e76-e955bd7adbf4"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8174-abe3-e89317258e59" class=""><mark class="highlight-default">🧪 Section 5: Defining Genes (Attributes)</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-810d-8f2a-e0891adb966b" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Registers a function called </mark><mark class="highlight-default"><code>attr_float</code></mark><mark class="highlight-default"> that produces a </mark><mark class="highlight-default"><strong>random decimal number between -5 and 5</strong></mark><mark class="highlight-default">.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8167-8dac-d03d24dba16d" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">This is how each gene in an individual is created.</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-81d6-be00-d13889a6b574"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-81a1-802b-dac30a2adc08" class=""><mark class="highlight-default">👤 Section 6: Building Individuals &amp; Population</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8162-afdf-e4435de47b82" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>initRepeat</code></mark><mark class="highlight-default"> → repeat the </mark><mark class="highlight-default"><code>attr_float</code></mark><mark class="highlight-default"> function </mark><mark class="highlight-default"><strong>10 times</strong></mark><mark class="highlight-default"> to create one individual.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8124-8813-e2b546d6d1d0" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">So each individual is a list of 10 random floats, e.g., </mark><mark class="highlight-default"><code>[1.2, -3.5, 0.7, 2.1, -4.6, 0.3, 3.9, -2.0, 1.1, -0.5]</code></mark><mark class="highlight-default">.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8195-acb9-e7c3af7ea860" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">This is a </mark><mark class="highlight-default"><strong>10-dimensional problem</strong></mark><mark class="highlight-default"> (10 variables to optimize).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8157-aa72-e4c1011846ae" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Creates a </mark><mark class="highlight-default"><strong>population</strong></mark><mark class="highlight-default"> — a list of many individuals.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-812a-ac31-dfe772d5fa7d" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">We&#x27;ll specify the population size later when we call this.</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8148-8d39-c40a37c7bf95"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-81b0-8592-d98353518c7b" class=""><mark class="highlight-default">🔧 Section 7: Registering Operators</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81d9-937e-c59aad13b88c" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><strong>mate</strong></mark><mark class="highlight-default"> = </mark><mark class="highlight-default"><strong>Crossover</strong></mark><mark class="highlight-default"> (mixing two parents to make children).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8187-be09-c963e9fb3474" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>cxBlend</code></mark><mark class="highlight-default"> = </mark><mark class="highlight-default"><strong>Blend Crossover</strong></mark><mark class="highlight-default"> → instead of just swapping genes, it creates children with values </mark><em><mark class="highlight-default">blended</mark></em><mark class="highlight-default"> between the parents.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8174-ad6c-ec8e0ea7b7db" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Formula: child = parent1 + α × (parent2 - parent1), with random variation.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-810b-817c-cbe13915b042" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>alpha=0.5</code></mark><mark class="highlight-default"> → controls how much &quot;blending&quot; happens. Higher alpha = more exploration.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-816e-b60d-e16cf45185fd" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><strong>mutate</strong></mark><mark class="highlight-default"> = adds random changes to genes.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-819d-90bd-cfad0cdbccf7" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>mutGaussian</code></mark><mark class="highlight-default"> → mutations come from a </mark><mark class="highlight-default"><strong>Gaussian (bell curve) distribution</strong></mark><mark class="highlight-default">.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-811c-aa6c-dea7955a1946" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>mu=0</code></mark><mark class="highlight-default"> → mean of the random change is 0 (changes are usually small).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81ee-b9b0-eb9a75e93142" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>sigma=1</code></mark><mark class="highlight-default"> → standard deviation = 1 (size of typical changes).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81aa-92a8-d26cb463d29b" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>indpb=0.2</code></mark><mark class="highlight-default"> → each gene has a </mark><mark class="highlight-default"><strong>20% chance</strong></mark><mark class="highlight-default"> of being mutated.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81f8-8049-eb307fc6ccce" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><strong>select</strong></mark><mark class="highlight-default"> = how to pick survivors for the next generation.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81db-80ca-ca3135a90e6e" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>selTournament</code></mark><mark class="highlight-default"> → pick </mark><mark class="highlight-default"><strong>3 random individuals</strong></mark><mark class="highlight-default">, keep the best one. Repeat to fill the new population.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8194-8673-e33028c96a64" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">This gives weaker individuals a small chance to survive too (helps diversity).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-816f-a270-e6008bcfe41e" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Registers our </mark><mark class="highlight-default"><code>evaluate</code></mark><mark class="highlight-default"> function (the Sphere function) as the fitness measure.</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-81d4-ad12-f90e92e93d91"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8176-92aa-c16fd4225865" class=""><mark class="highlight-default">🚀 Section 8: The Main Function</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-814c-9d0b-c1ca50433c12" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Creates a population of </mark><mark class="highlight-default"><strong>50 random individuals</strong></mark><mark class="highlight-default"> (each is a list of 10 floats between -5 and 5).</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-81fb-93e3-d05e90198d86"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8100-800f-f1a5a32c9dc5" class=""><mark class="highlight-default">📊 Section 9: Statistics Setup</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81d9-bd2d-cef9bde7c1d0" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Creates a </mark><mark class="highlight-default"><code>Statistics</code></mark><mark class="highlight-default"> object that will collect data each generation.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8160-a327-f9134105e352" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>lambda ind: ind.fitness.values</code></mark><mark class="highlight-default"> → tells it to look at each individual&#x27;s fitness value.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8123-a075-c035d3601a75" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Registers 4 statistics to track every generation:</mark></li></ul></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-814b-91fc-eb81c26cd835" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81e1-9c28-dc20633ee9ec"><th id="vZJ:" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Stat</mark></th><th id="m&lt;KA" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Meaning</mark></th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81b7-97ea-fa0ea6226a33"><td id="vZJ:" class=""><mark class="highlight-default"><code>avg</code></mark></td><td id="m&lt;KA" class=""><mark class="highlight-default">Average fitness of population</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81fa-84bd-eb550b2e5dfa"><td id="vZJ:" class=""><mark class="highlight-default"><code>std</code></mark></td><td id="m&lt;KA" class=""><mark class="highlight-default">Standard deviation (how spread out the fitness values are)</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81b7-9ae1-f14faab58918"><td id="vZJ:" class=""><mark class="highlight-default"><code>min</code></mark></td><td id="m&lt;KA" class=""><mark class="highlight-default">Best (lowest) fitness in this generation</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-813c-979f-ed947aa601b0"><td id="vZJ:" class=""><mark class="highlight-default"><code>max</code></mark></td><td id="m&lt;KA" class=""><mark class="highlight-default">Worst (highest) fitness in this generation</mark></td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-813b-88bc-c5871b6f3ec5" class=""><mark class="highlight-default">These help us </mark><mark class="highlight-default"><strong>watch the algorithm learn over time</strong></mark><mark class="highlight-default">.</mark></p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-816d-86c4-ffd891793196"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8167-936e-c6dea0a216a5" class=""><mark class="highlight-default">🔄 Section 10: Running the Algorithm</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8192-a1ab-df0b4c07ad52" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>eaSimple</code></mark><mark class="highlight-default"> = </mark><mark class="highlight-default"><strong>Evolutionary Algorithm Simple</strong></mark><mark class="highlight-default"> — the standard evolution loop. It does:</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81cf-8297-f47bf8a97850" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Evaluate everyone.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8119-9e65-d4f6875dea98" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Select parents.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8190-ab85-f5648a4fc236" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Apply crossover and mutation.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81e7-a077-d41cce75633c" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Replace the population.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-810e-ac0d-dfc7bbd4efad" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Repeat for many generations.</mark></li></ul></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-817e-acc8-c9d6fcac30d3" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-812a-a99b-dc036778fdec"><th id="jqE}" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Parameter</mark></th><th id="WYcc" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Meaning</mark></th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8143-bee7-f63365a63496"><td id="jqE}" class=""><mark class="highlight-default"><code>pop</code></mark></td><td id="WYcc" class=""><mark class="highlight-default">The starting population (50 individuals).</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8157-9e37-eb921f976ab4"><td id="jqE}" class=""><mark class="highlight-default"><code>toolbox</code></mark></td><td id="WYcc" class=""><mark class="highlight-default">All our registered functions.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81e9-83a0-ca9a529a740f"><td id="jqE}" class=""><mark class="highlight-default"><code>cxpb=0.5</code></mark></td><td id="WYcc" class=""><mark class="highlight-default"><strong>Crossover probability</strong></mark><mark class="highlight-default"> = 50% chance two parents mate.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8106-9375-fc233e3b49e5"><td id="jqE}" class=""><mark class="highlight-default"><code>mutpb=0.2</code></mark></td><td id="WYcc" class=""><mark class="highlight-default"><strong>Mutation probability</strong></mark><mark class="highlight-default"> = 20% chance an offspring mutates.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8197-b8eb-d1f87a88e67a"><td id="jqE}" class=""><mark class="highlight-default"><code>ngen=50</code></mark></td><td id="WYcc" class=""><mark class="highlight-default">Run for </mark><mark class="highlight-default"><strong>50 generations</strong></mark><mark class="highlight-default">.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81dc-a8d0-d0bc3818a7e9"><td id="jqE}" class=""><mark class="highlight-default"><code>stats=stats</code></mark></td><td id="WYcc" class=""><mark class="highlight-default">Use the statistics we registered.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8136-bd7e-e7beb93abce1"><td id="jqE}" class=""><mark class="highlight-default"><code>verbose=True</code></mark></td><td id="WYcc" class=""><mark class="highlight-default">Print progress each generation.</mark></td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-81cf-8df0-fdb7835407b0" class=""><mark class="highlight-default">It returns:<br/><br/>- </mark><mark class="highlight-default"><code>result</code></mark><mark class="highlight-default"> → the final evolved population.<br/><br/>- </mark><mark class="highlight-default"><code>logbook</code></mark><mark class="highlight-default"> → a record of all generations&#x27; statistics.</mark></p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-81ea-926a-e281e312903a"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-81d3-a03d-f628456bc7aa" class=""><mark class="highlight-default">🏆 Section 11: Print the Best Individual</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81b9-9bdc-c1838b67cbbd" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>selBest(result, k=1)</code></mark><mark class="highlight-default"> → picks the top 1 individual from the final population.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8137-9851-f3a7feabc71c" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>[0]</code></mark><mark class="highlight-default"> → gets the first (and only) item from that list.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81af-b86c-eb7739bb6495" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Prints the best 10-number solution and its fitness.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8153-b84a-f9c10710105e" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Expected output: all 10 numbers should be </mark><mark class="highlight-default"><strong>very close to 0</strong></mark><mark class="highlight-default">, and fitness close to </mark><mark class="highlight-default"><strong>0</strong></mark><mark class="highlight-default">.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8146-84c5-d78716e0e2fc" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Returns the final population and the logbook so we can analyze them later (e.g., plot graphs).</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-81bf-82a3-eaed6e11b68e"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8127-bbf5-e96e1556b044" class=""><mark class="highlight-default">▶️ Section 12: Running the Code</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8173-9ab7-e137ee29c8da" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><code>if __name__ == &quot;__main__&quot;:</code></mark><mark class="highlight-default"> → ensures the code runs only when this file is executed directly (not imported by another file).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81fc-81d1-cefdead7aa02" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default">Calls </mark><mark class="highlight-default"><code>main()</code></mark><mark class="highlight-default"> to run everything.</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8107-bc74-ecb61ba88729"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-818e-afa2-cddf9fd457e6" class=""><mark class="highlight-default">🧠 Quick Recap Cheat Sheet</mark></h2></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-818c-b402-c9e63dacf7ae" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8182-9038-e026ba3e9474"><th id="?MNz" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Step</mark></th><th id="Up_o" class="simple-table-header-color simple-table-header"><mark class="highlight-default">What Happens</mark></th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-816b-ad7d-ec13be00a79b"><td id="?MNz" class=""><mark class="highlight-default">1. Define problem</mark></td><td id="Up_o" class=""><mark class="highlight-default">Minimize sum of squares (Sphere function).</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8185-9396-e86438cd4435"><td id="?MNz" class=""><mark class="highlight-default">2. Create types</mark></td><td id="Up_o" class=""><mark class="highlight-default">Define </mark><mark class="highlight-default"><code>FitnessMin</code></mark><mark class="highlight-default"> (minimize) and </mark><mark class="highlight-default"><code>Individual</code></mark><mark class="highlight-default"> (list + fitness).</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8172-8885-d892fb3e1b09"><td id="?MNz" class=""><mark class="highlight-default">3. Initialize toolbox</mark></td><td id="Up_o" class=""><mark class="highlight-default">Register all GA tools (genes, individuals, operators).</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8157-95da-dbbe61a788ef"><td id="?MNz" class=""><mark class="highlight-default">4. Create population</mark></td><td id="Up_o" class=""><mark class="highlight-default">50 individuals × 10 genes each.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-817b-ba4c-e1c9e0b6028f"><td id="?MNz" class=""><mark class="highlight-default">5. Register operators</mark></td><td id="Up_o" class=""><mark class="highlight-default">Crossover (cxBlend), Mutation (Gaussian), Selection (Tournament).</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8104-b19e-d04fdceec47e"><td id="?MNz" class=""><mark class="highlight-default">6. Track statistics</mark></td><td id="Up_o" class=""><mark class="highlight-default">Watch avg, std, min, max fitness.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8107-bb17-ffd17023f4ad"><td id="?MNz" class=""><mark class="highlight-default">7. Run evolution</mark></td><td id="Up_o" class=""><mark class="highlight-default">50 generations of selection + crossover + mutation.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-811c-bcd9-f781aefccbd2"><td id="?MNz" class=""><mark class="highlight-default">8. Get best</mark></td><td id="Up_o" class=""><mark class="highlight-default">Pick best individual from final population.</mark></td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-816d-a06a-ecc834195ee9"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-81c4-b707-de3c2ec488f9" class=""><mark class="highlight-default">🌟 Key Operators Used (in Simple Words)</mark></h2></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-8115-a4bf-c5e4b33aa57f" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-818a-a278-ff07f138a4ad"><th id="Wkcg" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Operator</mark></th><th id="c:@W" class="simple-table-header-color simple-table-header"><mark class="highlight-default">What It Does</mark></th><th id="wIrZ" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Real-Life Analogy</mark></th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8179-a607-dd77c7a36e41"><td id="Wkcg" class=""><mark class="highlight-default"><strong>cxBlend</strong></mark></td><td id="c:@W" class=""><mark class="highlight-default">Mixes two parents&#x27; genes by blending values.</mark></td><td id="wIrZ" class=""><mark class="highlight-default">Two paint colors mixed to create a new shade.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8141-9ede-faacc9adebd2"><td id="Wkcg" class=""><mark class="highlight-default"><strong>mutGaussian</strong></mark></td><td id="c:@W" class=""><mark class="highlight-default">Adds small random changes to genes.</mark></td><td id="wIrZ" class=""><mark class="highlight-default">A small typo when copying a recipe.</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8157-b59f-ca4535cd004f"><td id="Wkcg" class=""><mark class="highlight-default"><strong>selTournament</strong></mark></td><td id="c:@W" class=""><mark class="highlight-default">Picks the best out of 3 random individuals.</mark></td><td id="wIrZ" class=""><mark class="highlight-default">A mini sports tournament — winner advances.</mark></td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-81b2-861b-e62838b791ee"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-81aa-b00c-e01b5f45d013" class=""><mark class="highlight-default">📉 What the Output Looks Like</mark></h2></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-818f-b236-c00a14a0f2ad" class=""><mark class="highlight-default">Each generation prints something like:</mark></p></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-81ab-9b92-d00d280dfca8" class=""><mark class="highlight-default">You&#x27;ll see </mark><mark class="highlight-default"><code>min</code></mark><mark class="highlight-default"> getting smaller and smaller — the population is </mark><mark class="highlight-default"><strong>evolving toward zero</strong></mark><mark class="highlight-default">! 📉</mark></p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-81a9-a520-edc8121867bd"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-81b2-ba2c-f974faffc51c" class=""><mark class="highlight-default">🔬 Comparison with Your Previous Codes</mark></h2></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-8124-96eb-d0efbc1e2aef" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-815d-93cc-d3b674eb3bc2"><th id="HV;P" class="simple-table-header-color simple-table-header"><mark class="highlight-default">Feature</mark></th><th id="{Q`;" class="simple-table-header-color simple-table-header"><mark class="highlight-default">GA-NN Hybrid (Code 1)</mark></th><th id="fpK]" class="simple-table-header-color simple-table-header"><mark class="highlight-default">CSA (Code 2)</mark></th><th id="Kmdd" class="simple-table-header-color simple-table-header"><mark class="highlight-default">DEAP (Code 3)</mark></th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-812d-b9d1-cc85e7af011e"><td id="HV;P" class=""><mark class="highlight-default">Goal</mark></td><td id="{Q`;" class=""><mark class="highlight-default">Optimize NN hyperparameters</mark></td><td id="fpK]" class=""><mark class="highlight-default">Minimize </mark><mark class="highlight-default"><code>x²</code></mark><mark class="highlight-default"> (1D)</mark></td><td id="Kmdd" class=""><mark class="highlight-default">Minimize sum of squares (10D)</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8164-9ead-d7d18e12c603"><td id="HV;P" class=""><mark class="highlight-default">Library</mark></td><td id="{Q`;" class=""><mark class="highlight-default">DEAP</mark></td><td id="fpK]" class=""><mark class="highlight-default">NumPy only</mark></td><td id="Kmdd" class=""><mark class="highlight-default">DEAP</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81ff-8260-f586069b0a15"><td id="HV;P" class=""><mark class="highlight-default">Inspiration</mark></td><td id="{Q`;" class=""><mark class="highlight-default">Evolution</mark></td><td id="fpK]" class=""><mark class="highlight-default">Immune system</mark></td><td id="Kmdd" class=""><mark class="highlight-default">Evolution</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-814d-84fc-c41c41289da6"><td id="HV;P" class=""><mark class="highlight-default">Selection</mark></td><td id="{Q`;" class=""><mark class="highlight-default">Tournament</mark></td><td id="fpK]" class=""><mark class="highlight-default">Top-N best</mark></td><td id="Kmdd" class=""><mark class="highlight-default">Tournament</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81f5-8d1f-e554a1f701ff"><td id="HV;P" class=""><mark class="highlight-default">Crossover</mark></td><td id="{Q`;" class=""><mark class="highlight-default">Two-point</mark></td><td id="fpK]" class=""><mark class="highlight-default">None</mark></td><td id="Kmdd" class=""><mark class="highlight-default">Blend (cxBlend)</mark></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-81cd-bc15-fd29794536ce"><td id="HV;P" class=""><mark class="highlight-default">Tracks stats</mark></td><td id="{Q`;" class=""><mark class="highlight-default">No</mark></td><td id="fpK]" class=""><mark class="highlight-default">Manual prints</mark></td><td id="Kmdd" class=""><mark class="highlight-default">Yes (Statistics + logbook)</mark></td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8194-b2ff-ebfc43d9cc47"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-813c-b331-dc0491336769" class=""><mark class="highlight-default">✨ Why DEAP is Powerful</mark></h2></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81f1-b6fc-fcc0425a7893" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><strong>Flexible</strong></mark><mark class="highlight-default">: You can plug in any fitness function, mutation, or crossover.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-81dc-9312-e02dcd8aa081" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><strong>Modular</strong></mark><mark class="highlight-default">: Each piece (Individual, Toolbox, Operators) is independent and reusable.</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-817d-8441-ee02c7a649eb" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><strong>Scalable</strong></mark><mark class="highlight-default">: Supports distributed/parallel processing (that&#x27;s where the &quot;D&quot; in DEAP comes from!).</mark></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8188-9ce3-fcd473f0b458" class="bulleted-list"><li style="list-style-type:disc"><mark class="highlight-default"><strong>Well-tested</strong></mark><mark class="highlight-default">: Comes with many ready-made algorithms (</mark><mark class="highlight-default"><code>eaSimple</code></mark><mark class="highlight-default">, </mark><mark class="highlight-default"><code>eaMuPlusLambda</code></mark><mark class="highlight-default">, </mark><mark class="highlight-default"><code>eaMuCommaLambda</code></mark><mark class="highlight-default">, etc.).</mark></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8107-9906-fe5a6ef053cb"/></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-81bc-89bb-eb35f92139d0" class=""><mark class="highlight-default">If you want, I can also show you how to:<br/><br/>- 📈 </mark><mark class="highlight-default"><strong>Plot the fitness curve</strong></mark><mark class="highlight-default"> using </mark><mark class="highlight-default"><code>logbook</code></mark><mark class="highlight-default"> (a beautiful chart showing improvement)<br/><br/>- 🌐 </mark><mark class="highlight-default"><strong>Solve a harder function</strong></mark><mark class="highlight-default"> like Rastrigin or Rosenbrock (famous test functions)<br/><br/>- ⚡ </mark><mark class="highlight-default"><strong>Use parallel evaluation</strong></mark><mark class="highlight-default"> to speed up DEAP using multiple CPU cores</mark></p></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-817e-b46e-dc8e823abdec" class=""><mark class="highlight-default">Just let me know! 😊</mark></p></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>

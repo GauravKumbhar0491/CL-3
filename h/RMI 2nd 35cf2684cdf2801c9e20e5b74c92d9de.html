@@ -1,0 +1,832 @@
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=utf-8"/><title>RMI 2nd </title><style>
+/* cspell:disable-file */
+/* webkit printing magic: print all background colors */
+html {
+	-webkit-print-color-adjust: exact;
+}
+* {
+	box-sizing: border-box;
+	-webkit-print-color-adjust: exact;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+@media only screen {
+	body {
+		margin: 2em auto;
+		max-width: 900px;
+		color: rgb(55, 53, 47);
+	}
+}
+
+body {
+	line-height: 1.5;
+	white-space: pre-wrap;
+}
+
+a,
+a.visited {
+	color: inherit;
+	text-decoration: underline;
+}
+
+.pdf-relative-link-path {
+	font-size: 80%;
+	color: #444;
+}
+
+h1,
+h2,
+h3 {
+	letter-spacing: -0.01em;
+	line-height: 1.2;
+	font-weight: 600;
+	margin-bottom: 0;
+}
+
+/* Override strong tags inside headings to maintain consistent weight */
+h1 strong,
+h2 strong,
+h3 strong {
+	font-weight: 600;
+}
+
+.page-title {
+	font-size: 2.5rem;
+	font-weight: 700;
+	margin-top: 0;
+	margin-bottom: 0.75em;
+}
+
+h1 {
+	font-size: 1.875rem;
+	margin-top: 1.875rem;
+}
+
+h2 {
+	font-size: 1.5rem;
+	margin-top: 1.5rem;
+}
+
+h3 {
+	font-size: 1.25rem;
+	margin-top: 1.25rem;
+}
+
+.source {
+	border: 1px solid #ddd;
+	border-radius: 3px;
+	padding: 1.5em;
+	word-break: break-all;
+}
+
+.callout {
+	border-radius: 10px;
+	padding: 1rem;
+}
+
+figure {
+	margin: 1.25em 0;
+	page-break-inside: avoid;
+}
+
+figcaption {
+	opacity: 0.5;
+	font-size: 85%;
+	margin-top: 0.5em;
+}
+
+mark {
+	background-color: transparent;
+}
+
+.indented {
+	padding-left: 1.5em;
+}
+
+hr {
+	background: transparent;
+	display: block;
+	width: 100%;
+	height: 1px;
+	visibility: visible;
+	border: none;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+img {
+	max-width: 100%;
+}
+
+@media only print {
+	img {
+		max-height: 100vh;
+		object-fit: contain;
+	}
+
+	table.collection-content {
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	table.collection-content th,
+	table.collection-content td {
+		overflow-wrap: anywhere;
+	}
+
+	table.collection-content td > .user,
+	table.collection-content td > time {
+		white-space: pre-wrap;
+	}
+}
+
+@page {
+	margin: 1in;
+}
+
+.collection-content-wrapper {
+	overflow-x: auto;
+}
+
+@media only print {
+	.collection-content-wrapper {
+		overflow-x: visible;
+	}
+}
+
+.collection-content {
+	font-size: 0.875rem;
+}
+
+.collection-content td {
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.column-list {
+	display: flex;
+	gap: 46px;
+}
+
+.column {
+	min-width: 0;
+	overflow: hidden;
+}
+
+.column > *:first-child {
+	margin-top: 0;
+}
+
+.table_of_contents-item {
+	display: block;
+	font-size: 0.875rem;
+	line-height: 1.3;
+	padding: 0.125rem;
+}
+
+.table_of_contents-indent-1 {
+	margin-left: 1.5rem;
+}
+
+.table_of_contents-indent-2 {
+	margin-left: 3rem;
+}
+
+.table_of_contents-indent-3 {
+	margin-left: 4.5rem;
+}
+
+.table_of_contents-link {
+	text-decoration: none;
+	opacity: 0.7;
+	border-bottom: 1px solid rgba(55, 53, 47, 0.18);
+}
+
+table,
+th,
+td {
+	border: 1px solid rgba(55, 53, 47, 0.09);
+}
+
+table {
+	border-collapse: collapse;
+	border-left: none;
+	border-right: none;
+}
+
+th,
+td {
+	font-weight: normal;
+	padding: 0.25em 0.5em;
+	line-height: 1.5;
+	min-height: 1.5em;
+	text-align: left;
+}
+
+th {
+	color: rgba(55, 53, 47, 0.6);
+}
+
+ol,
+ul {
+	margin: 0;
+	margin-block-start: 0.6em;
+	margin-block-end: 0.6em;
+}
+
+li > ol:first-child,
+li > ul:first-child {
+	margin-block-start: 0.6em;
+}
+
+ul > li {
+	list-style: disc;
+}
+
+ul.to-do-list {
+	padding-inline-start: 0;
+}
+
+ul.to-do-list > li {
+	list-style: none;
+}
+
+.to-do-children-checked {
+	text-decoration: line-through;
+	opacity: 0.375;
+}
+
+ul.toggle > li {
+	list-style: none;
+}
+
+ul {
+	padding-inline-start: 1.7em;
+}
+
+ul > li {
+	padding-left: 0.1em;
+}
+
+ol {
+	padding-inline-start: 1.6em;
+}
+
+ol.numbered-list.numbered-list-digits-2 {
+	padding-inline-start: 2em;
+}
+
+ol.numbered-list.numbered-list-digits-3plus {
+	padding-inline-start: 2.4em;
+}
+
+ol > li {
+	padding-left: 0.2em;
+}
+
+.mono ol {
+	padding-inline-start: 2em;
+}
+
+.mono ol > li {
+	text-indent: -0.4em;
+}
+
+.toggle {
+	padding-inline-start: 0em;
+	list-style-type: none;
+}
+
+/* Indent toggle children */
+.toggle > li > details {
+	padding-left: 1.7em;
+}
+
+.toggle > li > details > summary {
+	margin-left: -1.1em;
+}
+
+.selected-value {
+	display: inline-block;
+	padding: 0 0.5em;
+	background: rgba(206, 205, 202, 0.5);
+	border-radius: 3px;
+	margin-right: 0.5em;
+	margin-top: 0.3em;
+	margin-bottom: 0.3em;
+	white-space: nowrap;
+}
+
+.collection-title {
+	display: inline-block;
+	margin-right: 1em;
+}
+
+.page-description {
+	margin-bottom: 2em;
+}
+
+.simple-table {
+	margin-top: 1em;
+	font-size: 0.875rem;
+	empty-cells: show;
+}
+.simple-table td {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table th {
+	height: 29px;
+	min-width: 120px;
+}
+
+.simple-table-header-color {
+	background: rgb(247, 246, 243);
+	color: black;
+}
+.simple-table-header {
+	font-weight: 500;
+}
+
+time {
+	opacity: 0.5;
+}
+
+.icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	max-width: 1.2em;
+	max-height: 1.2em;
+	text-decoration: none;
+	vertical-align: text-bottom;
+	margin-right: 0.5em;
+}
+
+img.icon {
+	border-radius: 3px;
+}
+
+.callout img.notion-static-icon {
+	width: 1em;
+	height: 1em;
+}
+
+.callout p {
+	margin: 0;
+}
+
+.callout h1,
+.callout h2,
+.callout h3 {
+	margin: 0 0 0.6rem;
+}
+
+.user-icon {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: 100%;
+	margin-right: 0.5rem;
+}
+
+.user-icon-inner {
+	font-size: 0.8em;
+}
+
+.text-icon {
+	border: 1px solid #000;
+	text-align: center;
+}
+
+.page-cover-image {
+	display: block;
+	object-fit: cover;
+	width: 100%;
+	max-height: 30vh;
+}
+
+.page-header-icon {
+	font-size: 3rem;
+	margin-bottom: 1rem;
+}
+
+.page-header-icon-with-cover {
+	margin-top: -0.72em;
+	margin-left: 0.07em;
+}
+
+.page-header-icon img {
+	border-radius: 3px;
+}
+
+.link-to-page {
+	margin: 1em 0;
+	padding: 0;
+	border: none;
+	font-weight: 500;
+}
+
+p > .user {
+	opacity: 0.5;
+}
+
+td > .user,
+td > time {
+	white-space: nowrap;
+}
+
+input[type="checkbox"] {
+	transform: scale(1.5);
+	margin-right: 0.6em;
+	vertical-align: middle;
+}
+
+p {
+	margin-top: 0.5em;
+	margin-bottom: 0.5em;
+}
+
+.image {
+	border: none;
+	margin: 1.5em 0;
+	padding: 0;
+	border-radius: 0;
+	text-align: center;
+}
+
+.code,
+code {
+	background: rgba(135, 131, 120, 0.15);
+	border-radius: 3px;
+	padding: 0.2em 0.4em;
+	border-radius: 3px;
+	font-size: 85%;
+	tab-size: 2;
+}
+
+code {
+	color: #eb5757;
+}
+
+.code {
+	padding: 1.5em 1em;
+}
+
+.code-wrap {
+	white-space: pre-wrap;
+	word-break: break-all;
+}
+
+.code > code {
+	background: none;
+	padding: 0;
+	font-size: 100%;
+	color: inherit;
+}
+
+blockquote {
+	font-size: 1em;
+	margin: 1em 0;
+	padding-left: 1em;
+	border-left: 3px solid rgb(55, 53, 47);
+}
+
+blockquote.quote-large {
+	font-size: 1.25em;
+}
+
+.bookmark {
+	text-decoration: none;
+	max-height: 8em;
+	padding: 0;
+	display: flex;
+	width: 100%;
+	align-items: stretch;
+}
+
+.bookmark-title {
+	font-size: 0.85em;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	height: 1.75em;
+	white-space: nowrap;
+}
+
+.bookmark-text {
+	display: flex;
+	flex-direction: column;
+}
+
+.bookmark-info {
+	flex: 4 1 180px;
+	padding: 12px 14px 14px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+
+.bookmark-image {
+	width: 33%;
+	flex: 1 1 180px;
+	display: block;
+	position: relative;
+	object-fit: cover;
+	border-radius: 1px;
+}
+
+.bookmark-description {
+	color: rgba(55, 53, 47, 0.6);
+	font-size: 0.75em;
+	overflow: hidden;
+	max-height: 4.5em;
+	word-break: break-word;
+}
+
+.bookmark-href {
+	font-size: 0.75em;
+	margin-top: 0.25em;
+}
+
+.sans { font-family: ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol"; }
+.code { font-family: "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace; }
+.serif { font-family: Lyon-Text, Georgia, ui-serif, serif; }
+.mono { font-family: iawriter-mono, Nitti, Menlo, Courier, monospace; }
+.pdf .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK JP'; }
+.pdf:lang(zh-CN) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK SC'; }
+.pdf:lang(zh-TW) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK TC'; }
+.pdf:lang(ko-KR) .sans { font-family: Inter, ui-sans-serif, -apple-system, BlinkMacSystemFont, "Segoe UI Variable Display", "Segoe UI", Helvetica, "Apple Color Emoji", "Noto Sans Arabic", "Noto Sans Hebrew", Arial, sans-serif, "Segoe UI Emoji", "Segoe UI Symbol", 'Twemoji', 'Noto Color Emoji', 'Noto Sans CJK KR'; }
+.pdf .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .code { font-family: Source Code Pro, "SFMono-Regular", Menlo, Consolas, "PT Mono", "Liberation Mono", Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.pdf .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK JP'; }
+.pdf:lang(zh-CN) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK SC'; }
+.pdf:lang(zh-TW) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK TC'; }
+.pdf:lang(ko-KR) .serif { font-family: PT Serif, Lyon-Text, Georgia, ui-serif, serif, 'Twemoji', 'Noto Color Emoji', 'Noto Serif CJK KR'; }
+.pdf .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK JP'; }
+.pdf:lang(zh-CN) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK SC'; }
+.pdf:lang(zh-TW) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK TC'; }
+.pdf:lang(ko-KR) .mono { font-family: PT Mono, iawriter-mono, Nitti, Menlo, Courier, monospace, 'Twemoji', 'Noto Color Emoji', 'Noto Sans Mono CJK KR'; }
+.highlight-default {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.highlight-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.highlight-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.highlight-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.highlight-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.highlight-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.highlight-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.highlight-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.highlight-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.highlight-default_background {
+	color: rgba(44, 44, 43, 1);
+}
+.highlight-gray_background {
+	background: rgba(42, 28, 0, 0.07);
+}
+.highlight-brown_background {
+	background: rgba(139, 46, 0, 0.086);
+}
+.highlight-orange_background {
+	background: rgba(224, 101, 1, 0.129);
+}
+.highlight-yellow_background {
+	background: rgba(211, 168, 0, 0.137);
+}
+.highlight-teal_background {
+	background: rgba(0, 100, 45, 0.09);
+}
+.highlight-blue_background {
+	background: rgba(0, 124, 215, 0.094);
+}
+.highlight-purple_background {
+	background: rgba(102, 0, 178, 0.078);
+}
+.highlight-pink_background {
+	background: rgba(197, 0, 93, 0.086);
+}
+.highlight-red_background {
+	background: rgba(223, 22, 0, 0.094);
+}
+.block-color-default {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray {
+	color: rgba(125, 122, 117, 1);
+	fill: rgba(125, 122, 117, 1);
+}
+.block-color-brown {
+	color: rgba(159, 118, 90, 1);
+	fill: rgba(159, 118, 90, 1);
+}
+.block-color-orange {
+	color: rgba(210, 123, 45, 1);
+	fill: rgba(210, 123, 45, 1);
+}
+.block-color-yellow {
+	color: rgba(203, 148, 52, 1);
+	fill: rgba(203, 148, 52, 1);
+}
+.block-color-teal {
+	color: rgba(80, 148, 110, 1);
+	fill: rgba(80, 148, 110, 1);
+}
+.block-color-blue {
+	color: rgba(56, 125, 201, 1);
+	fill: rgba(56, 125, 201, 1);
+}
+.block-color-purple {
+	color: rgba(154, 107, 180, 1);
+	fill: rgba(154, 107, 180, 1);
+}
+.block-color-pink {
+	color: rgba(193, 76, 138, 1);
+	fill: rgba(193, 76, 138, 1);
+}
+.block-color-red {
+	color: rgba(207, 81, 72, 1);
+	fill: rgba(207, 81, 72, 1);
+}
+.block-color-default_background {
+	color: inherit;
+	fill: inherit;
+}
+.block-color-gray_background {
+	background: rgba(240, 239, 237, 1);
+}
+.block-color-brown_background {
+	background: rgba(245, 237, 233, 1);
+}
+.block-color-orange_background {
+	background: rgba(251, 235, 222, 1);
+}
+.block-color-yellow_background {
+	background: rgba(249, 243, 220, 1);
+}
+.block-color-teal_background {
+	background: rgba(232, 241, 236, 1);
+}
+.block-color-blue_background {
+	background: rgba(229, 242, 252, 1);
+}
+.block-color-purple_background {
+	background: rgba(243, 235, 249, 1);
+}
+.block-color-pink_background {
+	background: rgba(250, 233, 241, 1);
+}
+.block-color-red_background {
+	background: rgba(252, 233, 231, 1);
+}
+.select-value-color-default { background-color: rgba(42, 28, 0, 0.07); }
+.select-value-color-gray { background-color: rgba(28, 19, 1, 0.11); }
+.select-value-color-brown { background-color: rgba(127, 51, 0, 0.156); }
+.select-value-color-orange { background-color: rgba(196, 88, 0, 0.203); }
+.select-value-color-yellow { background-color: rgba(209, 156, 0, 0.282); }
+.select-value-color-green { background-color: rgba(0, 96, 38, 0.156); }
+.select-value-color-blue { background-color: rgba(0, 118, 217, 0.203); }
+.select-value-color-purple { background-color: rgba(92, 0, 163, 0.141); }
+.select-value-color-pink { background-color: rgba(183, 0, 78, 0.152); }
+.select-value-color-red { background-color: rgba(206, 24, 0, 0.164); }
+
+.checkbox {
+	display: inline-flex;
+	vertical-align: text-bottom;
+	width: 16;
+	height: 16;
+	background-size: 16px;
+	margin-left: 2px;
+	margin-right: 5px;
+}
+
+.checkbox-on {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20width%3D%2216%22%20height%3D%2216%22%20fill%3D%22%2358A9D7%22%2F%3E%0A%3Cpath%20d%3D%22M6.71429%2012.2852L14%204.9995L12.7143%203.71436L6.71429%209.71378L3.28571%206.2831L2%207.57092L6.71429%2012.2852Z%22%20fill%3D%22white%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+
+.checkbox-off {
+	background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg%20width%3D%2216%22%20height%3D%2216%22%20viewBox%3D%220%200%2016%2016%22%20fill%3D%22none%22%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%3E%0A%3Crect%20x%3D%220.75%22%20y%3D%220.75%22%20width%3D%2214.5%22%20height%3D%2214.5%22%20fill%3D%22white%22%20stroke%3D%22%2336352F%22%20stroke-width%3D%221.5%22%2F%3E%0A%3C%2Fsvg%3E");
+}
+	
+</style></head><body><article id="35cf2684-cdf2-801c-9e20-e5b74c92d9de" class="page sans"><header><h1 class="page-title" dir="auto">RMI 2nd </h1><p class="page-description" dir="auto"></p></header><div class="page-body"><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80b5-acf3-ffb0c5adf413"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-80ac-8940-ea718d3e8f21" class="">🧵 What Does This Program Do?</h2></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-804d-9bec-f1e26a5f3057" class="">A <strong>client</strong> sends two strings to a <strong>remote server</strong>, and the server <strong>joins them together</strong> and sends back the result.</p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js" integrity="sha512-7Z9J3l1+EYfeaPKcGXu3MS/7T+w19WtKQY/n+xzmw4hZhJ9tyYmcUS+4QqAlzhicE5LAfMQSF3iFTK9bQdTxXg==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism.min.css" integrity="sha512-tN7Ec6zAFaVSG3TpNAKtk4DOHNpSwKHxxrsiw4GHKESGPs5njn/0sMCUMl2svV4wo4BK/rCP7juYz+zx+l6oeQ==" crossorigin="anonymous" referrerPolicy="no-referrer"/><pre id="35cf2684-cdf2-8062-ba0e-e1c044da88a5" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">Client                          Server
+  │                               │
+  │── &quot;Hello &quot; + &quot;World&quot; ────────►│
+  │                               │  &quot;Hello &quot; + &quot;World&quot; = &quot;Hello World&quot;
+  │◄── &quot;Hello World&quot;  ────────────│
+  │                               │</code></pre></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80a3-9d78-c99e3c812138"/></div><div style="display:contents" dir="auto"><h1 id="35cf2684-cdf2-803e-9593-d87bf0d79163" class="">🐍 PYTHON VERSION — Pyro4</h1></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8080-bed7-f9acd503dbff" class="">What is Pyro4?</h2></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8056-9831-e3bcebee5e34" class=""><strong>Pyro = Python Remote Objects</strong><br/>Unlike XMLRPC (which sends XML text), Pyro4 sends <strong>actual Python objects</strong> over the network. It feels even more natural — like the remote object is sitting right in your code.</p></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80f8-92c7-c4156be4ea99" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">XMLRPC  → converts everything to XML text
+Pyro4   → sends Python objects directly (pickled)</code></pre></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8012-93c4-cd463a28266f"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-804c-ac5d-d003f1f923b0" class="">🖥️ SERVER SIDE (Python/Pyro4)</h2></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-python.min.js" integrity="sha512-AKaNmg8COK0zEbjTdMHJAPJ0z6VeNqvRvH4/d5M4sHJbQQUToMBtodq4HaV4fa+WV2UTfoperElm66c9/8cKmQ==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><pre id="35cf2684-cdf2-80e8-82fa-ecaef21bd2e9" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">import Pyro4</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8076-a218-da01b9545305" class="">Imports the Pyro4 library — handles all network communication automatically.</p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8004-8e83-d4f5f2cff519"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-805b-925a-f7aee0fde078" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">@Pyro4.expose
+class StringConcatenator:</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-809a-9619-d4b39a5b9150" class="bulleted-list"><li style="list-style-type:disc"><code>class StringConcatenator</code> → a normal Python class</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80fa-9ff6-fe39475fc246" class="bulleted-list"><li style="list-style-type:disc"><code>@Pyro4.expose</code> → a <strong>decorator</strong> that says:<br/><em>&quot;Make ALL methods in this class callable by remote clients&quot;</em><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-803c-a6a3-f2577cac38bf" class="bulleted-list"><li style="list-style-type:circle">Without this → methods are <strong>private</strong> (local only)</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-805f-9b95-cac7699231fa" class="bulleted-list"><li style="list-style-type:circle">With this → methods are <strong>exposed</strong> (clients can call them over network)</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8048-ad06-f85796266057"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8095-adef-f130721807b1" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">    def concatenate(self, str1, str2):
+        print(&quot;string 1: &quot;, str1)
+        print(&quot;string 2: &quot;, str2)
+        return str1 + str2</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-808b-aff1-ce625a028bef" class="bulleted-list"><li style="list-style-type:disc"><code>self</code> → refers to the object itself (standard Python)</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-806f-a4da-d1d03d82cc5a" class="bulleted-list"><li style="list-style-type:disc"><code>str1, str2</code> → two strings received from the client</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8035-a471-f27c90e77a07" class="bulleted-list"><li style="list-style-type:disc"><code>print(...)</code> → prints on the <strong>server&#x27;s screen</strong> (not client&#x27;s!)</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8024-a3f3-d65d44ed2b68" class="bulleted-list"><li style="list-style-type:disc"><code>return str1 + str2</code> → joins strings and sends result back<div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80ba-8528-f79b7e5758ef" class="bulleted-list"><li style="list-style-type:circle"><code>&quot;Hello &quot; + &quot;World&quot;</code> → <code>&quot;Hello World&quot;</code></li></ul></div></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8029-8287-c1c96d3cfa4e"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-807d-a44b-c421c4439c19" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">def start_server():
+    concatenator = StringConcatenator()</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80db-8832-ce0736153a51" class="bulleted-list"><li style="list-style-type:disc">Creates an <strong>instance</strong> (object) of the class</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-804c-ba3b-dd709fcacd74" class="bulleted-list"><li style="list-style-type:disc">This is the actual object that will serve client requests</li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80d2-953b-ff32b05c359d"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-805d-ae47-e7eb82401c1f" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">    daemon = Pyro4.Daemon()</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8031-90fa-c2b47512a395" class="bulleted-list"><li style="list-style-type:disc"><code>Daemon</code> → the <strong>heart of the Pyro4 server</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8029-a358-d13a6c9e8fe4" class="bulleted-list"><li style="list-style-type:disc">It runs in the background, listening for incoming client calls</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8009-bc84-ed5775f69f0c" class="bulleted-list"><li style="list-style-type:disc">Think of it as the <strong>receptionist</strong> who receives calls and routes them</li></ul></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80dd-b228-ebbf256121f1" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">Client Call ──► Daemon (receptionist) ──► concatenator object ──► returns result</code></pre></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80fa-8122-f7d13a386a31"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80c3-8eaf-ef3d5b0790ef" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">    uri = daemon.register(concatenator)</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8029-a632-dc2cf3abcf55" class="bulleted-list"><li style="list-style-type:disc"><code>register()</code> → gives the object a <strong>unique address on the network</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8015-aed2-efce9bb6ada7" class="bulleted-list"><li style="list-style-type:disc"><code>uri</code> = Uniform Resource Identifier (like a URL for the object)</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80d8-b84c-f7cd888c4c55" class="bulleted-list"><li style="list-style-type:disc">Example URI: <code>PYRO:obj_abc123@localhost:56789</code></li></ul></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-807c-b420-f8b9b7032a2c" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80f9-8dd1-f3e6a2d4c2c5"><th id="gg?=" class="simple-table-header-color simple-table-header">Part</th><th id="]md&lt;" class="simple-table-header-color simple-table-header">Meaning</th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-806e-9400-ca41c9b1b758"><td id="gg?=" class=""><code>PYRO:</code></td><td id="]md&lt;" class="">Protocol (like http://)</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-802d-b8ec-dfc4907d0a0a"><td id="gg?=" class=""><code>obj_abc123</code></td><td id="]md&lt;" class="">Unique ID of the object</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80ff-8da2-e8807f2c20a4"><td id="gg?=" class=""><code>localhost</code></td><td id="]md&lt;" class="">Server machine</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8064-8fed-cafc1356bcda"><td id="gg?=" class=""><code>56789</code></td><td id="]md&lt;" class="">Port number (auto-assigned)</td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80d7-a8a4-f8d3bb57c04a"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8077-980d-c5b8795f2ea2" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">    print(&quot;Server URI:&quot;, uri)
+    print(&quot;Server is ready...&quot;)
+    daemon.requestLoop()</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8026-a201-f257a5f556c3" class="bulleted-list"><li style="list-style-type:disc">Prints the URI — <strong>client needs this to connect!</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80a8-aba0-efce00288213" class="bulleted-list"><li style="list-style-type:disc"><code>requestLoop()</code> → keeps server running forever, handling requests<div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8034-8f3a-ea4151c68bd0" class="bulleted-list"><li style="list-style-type:circle">Like <code>serve_forever()</code> in XMLRPC</li></ul></div></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80f9-9520-ed9a9372a5fa"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80dc-b59a-c47ef7a54228" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">if __name__ == &quot;__main__&quot;:
+    start_server()</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-803e-9dd9-d8c224a24a70" class="bulleted-list"><li style="list-style-type:disc">Only runs <code>start_server()</code> if this file is run <strong>directly</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-802e-9dd7-c1b1fdefe1bb" class="bulleted-list"><li style="list-style-type:disc">Prevents it from running if this file is <strong>imported</strong> elsewhere</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80e1-95ea-f62cdb75cd73" class="bulleted-list"><li style="list-style-type:disc">Best practice for Python programs</li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8011-81c5-d77f1574abcf"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-807a-b9dd-ca56cfc032a7" class="">💻 CLIENT SIDE (Python/Pyro4)</h2></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8037-b176-fb5d2b8503f6" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">import Pyro4</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-80bf-9fe6-c28943cecf12" class="">Same library, but used differently on client side.</p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-808a-b46c-f221102786fe"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8046-9811-d10cdba75e1f" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">uri = input(&quot;Enter Server URI: &quot;)</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-807e-a09f-c2d4747939ff" class="bulleted-list"><li style="list-style-type:disc">User must type the URI that the <strong>server printed</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8068-ae17-dee9c89a6657" class="bulleted-list"><li style="list-style-type:disc">e.g., <code>PYRO:obj_abc123@localhost:56789</code></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8055-a784-e638e388739f" class="bulleted-list"><li style="list-style-type:disc">This is how the client <strong>knows where the server is</strong></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-804a-89e9-ed3b0030a568"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80fd-9527-e96c23c54318" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">server = Pyro4.Proxy(uri)</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-808e-8480-f4d8a8b502e7" class="bulleted-list"><li style="list-style-type:disc"><code>Proxy</code> → creates a <strong>fake local object</strong> that represents the remote server</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8032-90a0-cdfee95c7c31" class="bulleted-list"><li style="list-style-type:disc">Every method you call on <code>server</code> → secretly travels over network to real server</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80c9-b021-f2e6238b368a" class="bulleted-list"><li style="list-style-type:disc">Looks like: <code>server.concatenate()</code> but works like a network call</li></ul></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-804b-b416-edcecc1728ac" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">server.concatenate(&quot;Hi&quot;, &quot;Bye&quot;)
+        │
+        │  [Pyro4 magic]
+        │
+        ▼
+  Network → real StringConcatenator.concatenate(&quot;Hi&quot;, &quot;Bye&quot;) on server
+        │
+        ▼
+  Returns &quot;HiBye&quot; back to client</code></pre></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8040-b27e-e6615f1835b9"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-801b-801d-facfb876b98f" class="code code-wrap"><code class="language-python" style="white-space:pre-wrap;word-break:break-all">s1 = input(&quot;Enter first string: &quot;)
+s2 = input(&quot;Enter second string: &quot;)
+result = server.concatenate(s1, s2)
+print(&quot;Concatenated String:&quot;, result)</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-805b-9134-c1741cca0645" class="bulleted-list"><li style="list-style-type:disc">Gets two strings from user</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80ef-90ef-c2303b89d6bc" class="bulleted-list"><li style="list-style-type:disc">Calls remote method (looks local, works remote!)</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80a9-9935-ea729e5f2d4d" class="bulleted-list"><li style="list-style-type:disc">Prints the result returned by server</li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80e9-abd1-db3ce686795b"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8003-a497-f5dd829bc515" class="">🔄 Pyro4 Full Flow</h2></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8038-a210-d0b9671c7d20" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">SERVER                              CLIENT
+  │                                   │
+  │ Create StringConcatenator obj     │
+  │ Register with Daemon              │
+  │ Print URI: PYRO:obj@localhost:port│
+  │ requestLoop() → waiting... 👂    |
+  │                                   │
+  │                   User types URI  │
+  │                    Proxy(uri) created
+  │                    User types str1, str2
+  │                                   │
+  │ ◄── concatenate(&quot;Hello&quot;,&quot;World&quot;) ─┤
+  │                                   │
+  │ Runs: &quot;Hello&quot;+&quot;World&quot;=&quot;HelloWorld&quot; │
+  │                                   │
+  ├──── &quot;Hello World&quot; ───────────────►│
+  │                                   │
+  │ waiting... 👂                      │ Prints result, exits</code></pre></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80a0-a8f0-f405f8be8014"/></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80b9-9f8f-f569110adb2e"/></div><div style="display:contents" dir="auto"><h1 id="35cf2684-cdf2-8043-8842-d6006f14c792" class="">☕ JAVA VERSION — RMI</h1></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-80db-8bb6-ff8212a6b14e" class="">What is Java RMI?</h2></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8072-9d30-fb46cb62688f" class=""><strong>RMI = Remote Method Invocation</strong><br/>Java&#x27;s built-in version of RPC. Works the same idea — call a method on a remote machine — but uses Java&#x27;s type system and interfaces.</p></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-801b-a697-e1b2f597c8fd" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">Python Pyro4  ≈  Java RMI
+(same concept, different language)</code></pre></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-804d-bcb1-df1759bb27f7"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8012-ab2e-f13373c566b1" class="">📋 The Interface — <code>StringIface</code></h2></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8099-a65f-f4aa3ecaf689" class="">Before looking at client, understand this: Java RMI requires an <strong>interface</strong> that both client and server agree on.</p></div><div style="display:contents" dir="auto"><script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-java.min.js" integrity="sha512-xKcnbsdT0KMoA4yrozkqZM1XJVTrPsjdQwvigxlAlxEDu8YDvC/jl+LfVqn0fY3Vs6m2y4a89JCHEIA/Z9zpmQ==" crossorigin="anonymous" referrerPolicy="no-referrer"></script><pre id="35cf2684-cdf2-80bc-b713-cade77b2eac1" class="code code-wrap"><code class="language-java" style="white-space:pre-wrap;word-break:break-all">// StringIface.java (not shown but implied)
+import java.rmi.*;
+public interface StringIface extends Remote {
+    String concat(String s1, String s2) throws RemoteException;
+}</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-800d-9484-fca568b927fc" class="bulleted-list"><li style="list-style-type:disc"><code>interface</code> → a <strong>contract/agreement</strong>: &quot;I promise to have these methods&quot;</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8094-9409-c7de893edafa" class="bulleted-list"><li style="list-style-type:disc"><code>extends Remote</code> → marks it as a <strong>remotely callable</strong> interface</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8090-9c3c-d0768e60af5b" class="bulleted-list"><li style="list-style-type:disc"><code>throws RemoteException</code> → network calls can fail, so this is <strong>mandatory</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80fe-9471-c610685cdb9b" class="bulleted-list"><li style="list-style-type:disc">Both client and server use this same interface — ensures they agree on method names</li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8033-ba2e-d80553bbb3c5"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8033-9fef-ffb47b06958c" class="">🖥️ SERVER SIDE (Java RMI) — implied</h2></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8031-ab00-ddf40a49c6f9" class="">The server would:</p></div><div style="display:contents" dir="auto"><ol type="1" id="35cf2684-cdf2-8087-b1e2-e4ee5397d7be" class="numbered-list" start="1"><li><strong>Implement</strong> <code>StringIface</code></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="35cf2684-cdf2-8007-b6ef-c469a2e091f9" class="numbered-list" start="2"><li><strong>Register</strong> the object with name <code>&quot;string&quot;</code> on port <code>1337</code></li></ol></div><div style="display:contents" dir="auto"><ol type="1" id="35cf2684-cdf2-8072-81cc-c1ac7a3e3083" class="numbered-list" start="3"><li><strong>Wait</strong> for client calls</li></ol></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-808a-9e63-f03826b55b4f"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8087-b583-fa6000407120" class="">💻 CLIENT VERSION 1 — Hardcoded Strings</h2></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-803b-bf7c-e4e17585ee68" class="code code-wrap"><code class="language-java" style="white-space:pre-wrap;word-break:break-all">import java.rmi.*;</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-80e6-94b4-d23819eafa1d" class="">Imports Java&#x27;s built-in RMI package (no external library needed — it&#x27;s part of Java).</p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-807f-8e1a-db8638f89fb1"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80c1-b923-c76553536d0a" class="code code-wrap"><code class="language-java" style="white-space:pre-wrap;word-break:break-all">public class Client {
+    public static void main(String[] args) {</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-806d-b8b1-c894cafba2ab" class="bulleted-list"><li style="list-style-type:disc"><code>public class Client</code> → class name must match filename <code>Client.java</code></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8069-aa5d-cc07d38bf6d9" class="bulleted-list"><li style="list-style-type:disc"><code>public static void main(String[] args)</code> → entry point of every Java program</li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-805f-9f8b-d283b7e4c855"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80c8-8b2a-c1040db91b5a" class="code code-wrap"><code class="language-java" style="white-space:pre-wrap;word-break:break-all">        try {</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8098-ba1a-f725dea4c5d0" class="">Everything inside <code>try { }</code> is <strong>protected</strong> — if anything goes wrong (network error, server down), it jumps to <code>catch</code>.</p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8032-b0f4-d30006a6f5f9"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8006-a1e2-e705023afc87" class="code code-wrap"><code class="language-java" style="white-space:pre-wrap;word-break:break-all">            String URI = &quot;rmi://127.0.0.1:1337/string&quot;;</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-809f-93c3-fd7e0989bb41" class="">The server&#x27;s address in RMI format:</p></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-800d-a325-cbb4e28d4b02" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8004-9862-cb8c60ee8a05"><th id="GALe" class="simple-table-header-color simple-table-header">Part</th><th id="JHQL" class="simple-table-header-color simple-table-header">Meaning</th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80ea-8d3d-d2f09f678c77"><td id="GALe" class=""><code>rmi://</code></td><td id="JHQL" class="">Protocol (like http://)</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80d7-99e3-c608fb39a825"><td id="GALe" class=""><code>127.0.0.1</code></td><td id="JHQL" class="">IP of server (127.0.0.1 = localhost = this machine)</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80a5-8083-cac3e83b3e70"><td id="GALe" class=""><code>1337</code></td><td id="JHQL" class="">Port number</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-805e-86ad-e7b4b3d53cd5"><td id="GALe" class=""><code>/string</code></td><td id="JHQL" class="">Name the server registered the object under</td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8084-abf2-d97cb7ccc524"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8039-b251-cabba01d84ac" class="code code-wrap"><code class="language-java" style="white-space:pre-wrap;word-break:break-all">            StringIface serv = (StringIface) Naming.lookup(URI);</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8006-aa69-cd6ab00011d1" class="">This is the <strong>most important line</strong> — breaks down into parts:</p></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8079-ae01-e18ec95bb734" class="bulleted-list"><li style="list-style-type:disc"><code>Naming.lookup(URI)</code> → contacts the server at that URI and fetches the remote object</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-809e-a72a-d317fd7a4b34" class="bulleted-list"><li style="list-style-type:disc"><code>(StringIface)</code> → <strong>cast</strong> — tells Java &quot;treat this as a StringIface object&quot;</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-808b-89d1-e3a0cefc8ce8" class="bulleted-list"><li style="list-style-type:disc"><code>StringIface serv</code> → stores it in variable <code>serv</code></li></ul></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-804b-9813-cd234bdf5196" class="">Now <code>serv</code> looks like a local Java object, but every method call goes over the network!</p></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8023-a083-c36c1dcabda6" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">Naming.lookup(&quot;rmi://127.0.0.1:1337/string&quot;)
+         │
+         ▼
+  Contacts RMI Registry at 127.0.0.1:1337
+         │
+         ▼
+  Finds object registered as &quot;string&quot;
+         │
+         ▼
+  Returns a proxy/stub object → stored in serv</code></pre></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-808f-9f87-e61bfab83261"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80c5-af68-faf98ee20bf1" class="code code-wrap"><code class="language-java" style="white-space:pre-wrap;word-break:break-all">            String str1 = &quot;Hello &quot;;
+            String str2 = &quot;World&quot;;</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-80e1-89a7-dbc6353d1740" class=""><strong>Hardcoded strings</strong> — no user input in Version 1.</p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8098-976f-d47f889e7d89"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8087-a140-de3796e78c99" class="code code-wrap"><code class="language-java" style="white-space:pre-wrap;word-break:break-all">            String result = serv.concat(str1, str2);</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-805e-b776-e00ef10ef62f" class="bulleted-list"><li style="list-style-type:disc">Calls <code>concat()</code> on the <strong>remote server object</strong></li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80bc-94bb-f010a88655a8" class="bulleted-list"><li style="list-style-type:disc">Looks like a normal Java method call</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80ff-ae69-c721cf346242" class="bulleted-list"><li style="list-style-type:disc">Secretly: packages args → sends over network → server runs concat() → returns result</li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-800e-872f-fec7c6f73069"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8012-86c3-c759d4c70dcd" class="code code-wrap"><code class="language-java" style="white-space:pre-wrap;word-break:break-all">            System.out.println(&quot;Concatenated String: &quot; + result);</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8026-b0cc-c857cfe43883" class="bulleted-list"><li style="list-style-type:disc"><code>System.out.println()</code> → Java&#x27;s print statement (like Python&#x27;s <code>print()</code>)</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-803c-8eec-f456fae64073" class="bulleted-list"><li style="list-style-type:disc">Prints: <code>Concatenated String: Hello World</code></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80df-bbd3-cac19ce7b532"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8037-a53e-dc3b16362bc1" class="code code-wrap"><code class="language-java" style="white-space:pre-wrap;word-break:break-all">        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            e.printStackTrace();
+        }</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-802e-b41e-ca9f6c9fb951" class="bulleted-list"><li style="list-style-type:disc"><code>catch (Exception e)</code> → catches <strong>any error</strong> that happens</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8064-b10e-d5eca23d4ba4" class="bulleted-list"><li style="list-style-type:disc"><code>e.getMessage()</code> → prints a short error description</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8061-a2c7-c137f42b2221" class="bulleted-list"><li style="list-style-type:disc"><code>e.printStackTrace()</code> → prints the full error trail (for debugging)</li></ul></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8031-b45d-f97703b3eb50" class="">Common errors caught here:</p></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80f7-88c0-c3e178f2abfb" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">Server not running      → ConnectException
+Wrong URI               → NotBoundException
+Network issue           → RemoteException</code></pre></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-804c-8a1c-de1b01a43a60"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-80d5-a49a-ca34c3f63134" class="">💻 CLIENT VERSION 2 — User Input with Scanner</h2></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-8054-99b8-c82e041adc30" class="">Everything is the same as Version 1 <strong>except</strong> the string input part:</p></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8001-8c05-fb1bee4c543e" class="code code-wrap"><code class="language-java" style="white-space:pre-wrap;word-break:break-all">            Scanner sc = new Scanner(System.in);</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8035-8908-dd3f9928bf1e" class="bulleted-list"><li style="list-style-type:disc"><code>Scanner</code> → Java&#x27;s tool for reading user input</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8051-aac2-dd83fe6fc604" class="bulleted-list"><li style="list-style-type:disc"><code>System.in</code> → the <strong>keyboard</strong> (standard input stream)</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-8033-8ac8-e6b788d02c20" class="bulleted-list"><li style="list-style-type:disc">Together: <em>&quot;Create a scanner that reads from the keyboard&quot;</em></li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-807d-bdc5-d26e00d5c687"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-8065-8acb-c747be4494a6" class="code code-wrap"><code class="language-java" style="white-space:pre-wrap;word-break:break-all">            System.out.print(&quot;Enter first string: &quot;);
+            String str1 = sc.nextLine();</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80c8-a8ff-f9cc6777e2aa" class="bulleted-list"><li style="list-style-type:disc"><code>System.out.print()</code> → prints <strong>without</strong> newline (cursor stays on same line)</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80f1-979f-d594ed46c18a" class="bulleted-list"><li style="list-style-type:disc"><code>sc.nextLine()</code> → reads a <strong>full line</strong> of text the user types (until Enter)</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80f0-8261-ef708f3263e8" class="bulleted-list"><li style="list-style-type:disc"><code>String str1</code> → stores the input</li></ul></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-802d-b87f-db16c9fb4468" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">Console looks like:
+Enter first string: Hello World_
+                    ↑ user types here</code></pre></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8085-b0ed-c0d9ac42c325"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80ea-87bb-fe9829e5a05f" class="code code-wrap"><code class="language-java" style="white-space:pre-wrap;word-break:break-all">            System.out.print(&quot;Enter second string: &quot;);
+            String str2 = sc.nextLine();</code></pre></div><div style="display:contents" dir="auto"><p id="35cf2684-cdf2-80f4-b775-d8c4f2243aef" class="">Same — reads second string from user.</p></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-8044-ac0f-f501a6fc4a3c"/></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-80c9-8b14-de661d3e2201" class="code code-wrap"><code class="language-java" style="white-space:pre-wrap;word-break:break-all">            String result = serv.concat(str1, str2);
+            System.out.println(&quot;Concatenated String: &quot; + result);
+            sc.close();</code></pre></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80ff-90dc-f8104e856a14" class="bulleted-list"><li style="list-style-type:disc">Same remote call as Version 1</li></ul></div><div style="display:contents" dir="auto"><ul id="35cf2684-cdf2-80e2-8ccc-d3ea4555b346" class="bulleted-list"><li style="list-style-type:disc"><code>sc.close()</code> → <strong>closes the Scanner</strong> (frees memory — good practice!)</li></ul></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-80a7-9d66-e1886dfbd9aa"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-8088-9a2c-f5dd492d2b16" class="">🔄 Java RMI Full Flow</h2></div><div style="display:contents" dir="auto"><pre id="35cf2684-cdf2-803c-98b9-ebc4decb049f" class="code code-wrap"><code style="white-space:pre-wrap;word-break:break-all">SERVER (implied)                    CLIENT
+  │                                   │
+  │ Register object as &quot;string&quot;        │
+  │ at port 1337                       │
+  │ Waiting... 👂                      │
+  │                                   │
+  │                    Naming.lookup() │
+  │ ◄── &quot;Give me object &#x27;string&#x27;&quot; ───┤
+  │                                   │
+  ├──── Returns proxy/stub ──────────►│
+  │                                   │
+  │                    User types strings (v2)
+  │                                   │
+  │ ◄── serv.concat(&quot;Hi&quot;,&quot;Bye&quot;) ─────┤
+  │                                   │
+  │ Runs: &quot;Hi&quot;+&quot;Bye&quot; = &quot;HiBye&quot;        │
+  │                                   │
+  ├──── &quot;HiBye&quot; ─────────────────────►│
+  │                                   │
+  │ Waiting... 👂                      │  Prints result, exits</code></pre></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-804a-8e37-df1256c2ca37"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-809d-842f-f5dc7f7f5aaf" class="">🔁 Side-by-Side Comparison</h2></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-8092-8f4a-f9eb3dcb3083" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8037-9786-c44fe50b3cc2"><th id="K|fF" class="simple-table-header-color simple-table-header">Feature</th><th id="k[&gt;X" class="simple-table-header-color simple-table-header">Python XMLRPC</th><th id="xzVc" class="simple-table-header-color simple-table-header">Python Pyro4</th><th id="f?|N" class="simple-table-header-color simple-table-header">Java RMI</th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-807c-94fd-fd0656a019cd"><td id="K|fF" class="">Library</td><td id="k[&gt;X" class="">Built-in</td><td id="xzVc" class="">External (<code>pip install Pyro4</code>)</td><td id="f?|N" class="">Built-in</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-806d-b82e-f7af25309779"><td id="K|fF" class="">Data Format</td><td id="k[&gt;X" class="">XML text</td><td id="xzVc" class="">Python pickle (binary)</td><td id="f?|N" class="">Java serialization</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80fb-992c-f940fd347056"><td id="K|fF" class="">Server setup</td><td id="k[&gt;X" class=""><code>SimpleXMLRPCServer</code></td><td id="xzVc" class=""><code>Daemon</code></td><td id="f?|N" class=""><code>UnicastRemoteObject</code></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80b7-b0d1-d2ed21ed63fe"><td id="K|fF" class="">Client connect</td><td id="k[&gt;X" class=""><code>ServerProxy(url)</code></td><td id="xzVc" class=""><code>Proxy(uri)</code></td><td id="f?|N" class=""><code>Naming.lookup(uri)</code></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80bd-90e9-fb0b930179f1"><td id="K|fF" class="">Expose method</td><td id="k[&gt;X" class=""><code>@register_function</code></td><td id="xzVc" class=""><code>@Pyro4.expose</code></td><td id="f?|N" class=""><code>implements Remote</code></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8044-9f28-dbac43ddef3c"><td id="K|fF" class="">URI format</td><td id="k[&gt;X" class=""><code>http://localhost:1234/</code></td><td id="xzVc" class=""><code>PYRO:obj@host:port</code></td><td id="f?|N" class=""><code>rmi://host:port/name</code></td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8034-8fb9-dcff7c156cd3"><td id="K|fF" class="">Language lock</td><td id="k[&gt;X" class="">Any language</td><td id="xzVc" class="">Python only</td><td id="f?|N" class="">Java only</td></tr></div></tbody></table></div><div style="display:contents" dir="auto"><hr id="35cf2684-cdf2-804a-938c-eff90a9b5613"/></div><div style="display:contents" dir="auto"><h2 id="35cf2684-cdf2-80a1-861e-f557ead130ea" class="">🧠 Master Summary</h2></div><div style="display:contents" dir="ltr"><table id="35cf2684-cdf2-8043-af5e-fa8bddaabf92" class="simple-table"><thead class="simple-table-header"><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80f0-9382-e26161ae5886"><th id="z[`W" class="simple-table-header-color simple-table-header">Term</th><th id="Fgeo" class="simple-table-header-color simple-table-header">Simple Meaning</th></tr></div></thead><tbody><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80dc-98b7-c7ab878ae527"><td id="z[`W" class=""><code>Pyro4.expose</code></td><td id="Fgeo" class="">&quot;Clients can call this method remotely&quot;</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-801b-a1c5-fef20d6d7d70"><td id="z[`W" class=""><code>Daemon</code></td><td id="Fgeo" class="">Background server engine that handles connections</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8059-b30a-d42aad0edfde"><td id="z[`W" class=""><code>register(obj)</code></td><td id="Fgeo" class="">Give object a network address (URI)</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-801f-8f2e-c6296d66579f"><td id="z[`W" class=""><code>Proxy(uri)</code></td><td id="Fgeo" class="">Fake local object that secretly calls remote server</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80d9-b2c3-e972e1c4372b"><td id="z[`W" class=""><code>requestLoop()</code></td><td id="Fgeo" class="">Keep server alive forever</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80bc-b0b4-e3532834f3c6"><td id="z[`W" class=""><code>RMI</code></td><td id="Fgeo" class="">Java&#x27;s built-in remote method calling system</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8021-a224-ef671a0cf1a7"><td id="z[`W" class=""><code>Naming.lookup()</code></td><td id="Fgeo" class="">Find and fetch a remote object by its URI</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-80f9-a290-ceaa92164edb"><td id="z[`W" class=""><code>Scanner</code></td><td id="Fgeo" class="">Java tool for reading keyboard input</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-8009-9b57-d708b414256b"><td id="z[`W" class=""><code>extends Remote</code></td><td id="Fgeo" class="">Java&#x27;s way of saying &quot;this can be called remotely&quot;</td></tr></div><div style="display:contents" dir="ltr"><tr id="35cf2684-cdf2-808d-a04e-fb998399cda4"><td id="z[`W" class=""><code>throws RemoteException</code></td><td id="Fgeo" class="">&quot;This method might fail due to network issues&quot;</td></tr></div></tbody></table></div></div></article><span class="sans" style="font-size:14px;padding-top:2em"></span></body></html>
