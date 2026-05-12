@@ -1,0 +1,539 @@
+Sentiment Prediction using RNN (LSTM) – Theory Explanation
+
+Aim
+
+To design and implement a Recurrent Neural Network (RNN) using LSTM (Long Short-Term Memory) for Sentiment Analysis on movie reviews from the IMDb dataset.
+
+The model predicts whether a review is:
+
+Positive
+
+Negative
+
+
+
+---
+
+1. Introduction to RNN
+
+A Recurrent Neural Network (RNN) is a type of neural network designed for:
+
+Sequential data
+
+Time-series data
+
+Text processing
+
+Speech recognition
+
+Language modeling
+
+
+Unlike traditional neural networks, RNN remembers previous information using feedback connections.
+
+Example:
+
+Understanding a sentence requires remembering previous words.
+
+
+
+---
+
+2. Why LSTM is Used Instead of Simple RNN
+
+Simple RNN suffers from:
+
+Vanishing gradient problem
+
+Difficulty remembering long-term information
+
+
+To solve this, LSTM (Long Short-Term Memory) is used.
+
+
+---
+
+3. What is LSTM?
+
+An Long Short-Term Memory is an advanced RNN architecture capable of remembering information for long periods.
+
+LSTM contains:
+
+Forget Gate
+
+Input Gate
+
+Output Gate
+
+
+These gates control:
+
+What information to remember
+
+What information to forget
+
+
+This makes LSTM highly effective for:
+
+Sentiment analysis
+
+Language translation
+
+Text prediction
+
+
+
+---
+
+4. About IMDb Dataset
+
+The IMDb Dataset contains movie reviews labeled as:
+
+Positive (1)
+
+Negative (0)
+
+
+Dataset details:
+
+25,000 training reviews
+
+25,000 testing reviews
+
+
+This is a Binary Classification Problem because there are only two classes.
+
+
+---
+
+5. Data Preprocessing
+
+Preprocessing converts text into numerical format suitable for deep learning.
+
+
+---
+
+a) Loading Dataset
+
+(input_train, y_train), (input_test, y_test) = imdb.load_data(num_words=max_features)
+
+This loads:
+
+Training reviews
+
+Testing reviews
+
+Corresponding labels
+
+
+
+---
+
+b) Vocabulary Limitation
+
+max_features = 10000
+
+Only the top 10,000 most frequently used words are considered.
+
+Purpose:
+
+Reduce complexity
+
+Improve training speed
+
+Remove rare unnecessary words
+
+
+
+---
+
+c) Sequence Padding
+
+sequence.pad_sequences(input_train, maxlen=maxlen)
+
+Reviews have different lengths.
+
+Neural networks require equal-length input.
+
+Padding:
+
+Adds zeros to shorter reviews
+
+Truncates longer reviews
+
+
+Final length:
+
+maxlen = 200
+
+Each review becomes a sequence of 200 words.
+
+
+---
+
+6. Model Architecture
+
+The model uses:
+
+1. Embedding Layer
+
+
+2. LSTM Layer
+
+
+3. Dense Output Layer
+
+
+
+
+---
+
+7. Embedding Layer
+
+Embedding(max_features, 128)
+
+Purpose:
+
+Convert words into dense numerical vectors
+
+
+Instead of simple numbers, words are represented as meaningful vectors.
+
+Example:
+
+Similar words get similar vector representations.
+
+
+
+---
+
+Word Embedding Concept
+
+Each word is converted into a 128-dimensional vector.
+
+This helps the model understand:
+
+semantic meaning
+
+relationships between words
+
+
+
+---
+
+8. LSTM Layer
+
+LSTM(128, dropout=0.2, recurrent_dropout=0.2)
+
+This is the core layer of the model.
+
+
+---
+
+a) 128 Units
+
+The LSTM has 128 memory cells.
+
+More units allow learning complex patterns.
+
+
+---
+
+b) Dropout
+
+dropout = 0.2
+
+Randomly disables 20% neurons during training.
+
+Purpose:
+
+Prevent overfitting
+
+Improve generalization
+
+
+
+---
+
+c) Recurrent Dropout
+
+recurrent_dropout = 0.2
+
+Applies dropout to recurrent connections.
+
+Helps stabilize sequence learning.
+
+
+---
+
+9. Output Layer
+
+Dense(1, activation='sigmoid')
+
+Since this is binary classification:
+
+Only one neuron is required
+
+
+
+---
+
+Sigmoid Activation Function
+
+\sigma(x)=\frac{1}{1+e^{-x}}
+
+Sigmoid converts output into probability between:
+
+0 and 1
+
+Interpretation:
+
+Closer to 1 → Positive review
+
+Closer to 0 → Negative review
+
+
+
+---
+
+10. Model Compilation
+
+model.compile(
+    optimizer='adam',
+    loss='binary_crossentropy',
+    metrics=['accuracy']
+)
+
+
+---
+
+a) Adam Optimizer
+
+Adam is an adaptive optimization algorithm.
+
+Benefits:
+
+Fast convergence
+
+Efficient learning
+
+Widely used in deep learning
+
+
+
+---
+
+b) Binary Crossentropy Loss
+
+Used for binary classification problems.
+
+Measures prediction error between:
+
+actual output
+
+predicted output
+
+
+Lower loss indicates better performance.
+
+
+---
+
+11. Model Training
+
+model.fit(...)
+
+Training process:
+
+1. Reviews are fed into the network
+
+
+2. Embeddings are generated
+
+
+3. LSTM learns sequence patterns
+
+
+4. Predictions are made
+
+
+5. Errors are calculated
+
+
+6. Weights are updated
+
+
+
+
+---
+
+Epochs
+
+epochs = 2
+
+One epoch means:
+
+> One complete pass through the training dataset.
+
+
+
+
+---
+
+Batch Size
+
+batch_size = 32
+
+32 reviews are processed at a time.
+
+
+---
+
+12. Model Evaluation
+
+model.evaluate(input_test, y_test)
+
+Measures:
+
+Test Loss
+
+Test Accuracy
+
+
+Higher accuracy means better sentiment prediction.
+
+
+---
+
+13. Prediction on Sample Review
+
+prediction = model.predict(sample_review)
+
+The model predicts sentiment probability.
+
+
+---
+
+Sentiment Decision
+
+if prediction > 0.5:
+    Positive
+else:
+    Negative
+
+Example:
+
+0.91 → Positive
+
+0.12 → Negative
+
+
+
+---
+
+14. How LSTM Understands Sentiment
+
+LSTM processes reviews word-by-word while remembering important context.
+
+Example:
+
+Sentence:
+
+> “The movie was not good”
+
+
+
+LSTM remembers the word:
+
+not
+
+which changes the sentiment meaning.
+
+This contextual memory is the biggest advantage of LSTM.
+
+
+---
+
+15. Advantages of LSTM
+
+Handles sequential data efficiently
+
+Remembers long-term dependencies
+
+Works well on text data
+
+Better than traditional RNN
+
+Effective for NLP tasks
+
+
+
+---
+
+16. Applications of Sentiment Analysis
+
+Sentiment analysis is widely used in:
+
+Product review analysis
+
+Social media monitoring
+
+Customer feedback systems
+
+Recommendation systems
+
+Opinion mining
+
+Chatbots
+
+
+
+---
+
+17. Error in Code
+
+Your code contains a small mistake:
+
+model.evaluatea()
+
+Correct method:
+
+model.evaluate()
+
+Extra a causes an error.
+
+
+---
+
+18. Final Result
+
+The LSTM model successfully:
+
+Learned sentiment patterns from reviews
+
+Predicted positive/negative sentiment
+
+Performed binary classification on text data
+
+
+The model demonstrates how RNN variants like LSTM are powerful for Natural Language Processing (NLP) tasks.
+
+
+---
+
+Conclusion
+
+In this experiment:
+
+IMDb dataset was used for sentiment analysis
+
+Text data was preprocessed using padding
+
+An LSTM-based RNN model was designed
+
+The model was trained and evaluated
+
+Sentiments were predicted successfully
+
+
+LSTM proved highly effective for sequence learning and sentiment prediction because of its ability to remember contextual information over long text sequences.
