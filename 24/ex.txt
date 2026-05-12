@@ -1,0 +1,650 @@
+CNN for Image Classification using CIFAR-10 – Theory Explanation
+
+Aim
+
+To design and implement a Convolutional Neural Network (CNN) for Image Classification using the CIFAR-10 dataset and optimize it using different hyperparameters such as:
+
+Learning Rate
+
+Filter Size
+
+Number of Layers
+
+Optimizers
+
+Dropout
+
+
+
+---
+
+1. Introduction to Image Classification
+
+Image classification is a Deep Learning task where a computer predicts the category of an image.
+
+Example:
+
+Cat
+
+Dog
+
+Car
+
+Airplane
+
+
+CNNs are widely used because they automatically learn visual features from images.
+
+
+---
+
+2. About CIFAR-10 Dataset
+
+The CIFAR-10 Dataset is a popular benchmark dataset used for image classification.
+
+It contains:
+
+60,000 color images
+
+10 image classes
+
+Image size = 32 × 32 pixels
+
+RGB images (3 color channels)
+
+
+
+---
+
+CIFAR-10 Classes
+
+The dataset includes the following categories:
+
+1. Airplane
+
+
+2. Automobile
+
+
+3. Bird
+
+
+4. Cat
+
+
+5. Deer
+
+
+6. Dog
+
+
+7. Frog
+
+
+8. Horse
+
+
+9. Ship
+
+
+10. Truck
+
+
+
+
+---
+
+Dataset Split
+
+50,000 training images
+
+10,000 testing images
+
+
+Training data is used to train the CNN model, while testing data evaluates model performance.
+
+
+---
+
+3. Data Preprocessing
+
+Preprocessing improves model training efficiency and accuracy.
+
+
+---
+
+a) Loading Dataset
+
+(train_images, train_labels), (test_images, test_labels) = tf.keras.datasets.cifar10.load_data()
+
+This loads:
+
+Training images and labels
+
+Testing images and labels
+
+
+
+---
+
+b) Normalization
+
+train_images = train_images / 255.0
+
+Pixel values originally range from:
+
+0 to 255
+
+Normalization converts them to:
+
+0 to 1
+
+Benefits:
+
+Faster convergence
+
+Stable learning
+
+Better accuracy
+
+
+
+---
+
+4. Hyperparameters Used
+
+Hyperparameters are settings that control model learning.
+
+
+---
+
+a) Learning Rate
+
+LEARNING_RATE = 0.001
+
+Learning rate controls how much model weights are updated during training.
+
+Very high → unstable learning
+
+Very low → slow training
+
+
+Value 0.001 is commonly used for Adam optimizer.
+
+
+---
+
+b) Filter Size
+
+FILTER_SIZE = (3,3)
+
+CNN filters scan images to detect features.
+
+3×3 filters are widely used because they:
+
+capture local patterns effectively
+
+reduce computational cost
+
+
+
+---
+
+c) Dropout Rate
+
+DROPOUT_RATE = 0.3
+
+30% neurons are randomly disabled during training.
+
+Purpose:
+
+Prevent overfitting
+
+Improve generalization
+
+
+
+---
+
+d) Optimizer
+
+optimizers.Adam()
+
+Adam optimizer combines:
+
+Momentum
+
+Adaptive learning rates
+
+
+Benefits:
+
+Faster convergence
+
+Efficient optimization
+
+Better performance
+
+
+
+---
+
+5. CNN Architecture
+
+The CNN model contains multiple layers for feature extraction and classification.
+
+
+---
+
+6. First Convolution Layer
+
+Conv2D(32, (3,3), activation='relu')
+
+Purpose:
+
+Detect low-level image features like:
+
+edges
+
+lines
+
+textures
+
+
+
+
+---
+
+32 Filters
+
+The model learns 32 different feature patterns.
+
+More filters allow better feature extraction.
+
+
+---
+
+ReLU Activation
+
+f(x)=\max(0,x)
+
+Purpose:
+
+Introduces non-linearity
+
+Removes negative values
+
+Speeds up learning
+
+
+
+---
+
+7. Batch Normalization
+
+BatchNormalization()
+
+Purpose:
+
+Normalize activations between layers
+
+Stabilize training
+
+Improve convergence speed
+
+
+Benefits:
+
+Faster training
+
+Better accuracy
+
+Reduced overfitting
+
+
+
+---
+
+8. Max Pooling Layer
+
+MaxPooling2D((2,2))
+
+Purpose:
+
+Reduce feature map size
+
+Reduce computation
+
+Retain important features
+
+
+It selects the maximum value from each 2×2 region.
+
+
+---
+
+9. Second Convolution Layer
+
+Conv2D(64, (3,3), activation='relu')
+
+This deeper layer learns more complex image patterns such as:
+
+shapes
+
+object parts
+
+textures
+
+
+Increasing filters from 32 → 64 improves learning capacity.
+
+
+---
+
+10. Dropout Layer
+
+Dropout(0.3)
+
+Randomly disables 30% neurons during training.
+
+Purpose:
+
+Prevent memorization
+
+Reduce overfitting
+
+Improve generalization
+
+
+
+---
+
+11. Third Convolution Layer
+
+Conv2D(64, (3,3), activation='relu')
+
+This layer extracts high-level features.
+
+Deep CNN layers learn:
+
+object structures
+
+semantic patterns
+
+
+
+---
+
+12. Flatten Layer
+
+Flatten()
+
+Converts 2D feature maps into 1D vectors.
+
+Example:
+
+Matrix → Vector
+
+Required before Dense layers.
+
+
+---
+
+13. Dense Layer
+
+Dense(64, activation='relu')
+
+Fully connected neural network layer.
+
+Purpose:
+
+Learn relationships between extracted features
+
+
+64 neurons are used.
+
+
+---
+
+14. Output Layer
+
+Dense(10)
+
+There are 10 neurons because CIFAR-10 has 10 classes.
+
+The neuron with highest output represents predicted class.
+
+
+---
+
+15. Loss Function
+
+SparseCategoricalCrossentropy(from_logits=True)
+
+Used for multiclass classification problems.
+
+Purpose:
+
+Measure prediction error
+
+
+Lower loss indicates better model performance.
+
+
+---
+
+16. Why from_logits=True?
+
+The output layer does not use softmax activation.
+
+Therefore:
+
+from_logits=True
+
+tells TensorFlow to internally apply softmax during loss calculation.
+
+
+---
+
+Softmax Function
+
+P(y_i)=\frac{e^{z_i}}{\sum_{j=1}^{n} e^{z_j}}
+
+Converts outputs into probabilities.
+
+
+---
+
+17. Model Training
+
+model.fit(...)
+
+Training steps:
+
+1. Images are passed into CNN
+
+
+2. Features are extracted
+
+
+3. Predictions are generated
+
+
+4. Error is calculated
+
+
+5. Weights are updated
+
+
+6. Process repeats for multiple epochs
+
+
+
+
+---
+
+Epochs
+
+epochs = 10
+
+One epoch means:
+
+> One complete pass through the training dataset.
+
+
+
+More epochs generally improve learning.
+
+
+---
+
+18. Validation Data
+
+validation_data=(test_images, test_labels)
+
+Validation data checks performance during training.
+
+Helps:
+
+monitor overfitting
+
+evaluate generalization
+
+
+
+---
+
+19. Hyperparameter Optimization
+
+Different hyperparameters affect performance.
+
+
+---
+
+a) Learning Rate Optimization
+
+High learning rate → unstable training
+
+Low learning rate → slow convergence
+
+
+Optimal learning rate improves accuracy.
+
+
+---
+
+b) Filter Size Optimization
+
+Different filter sizes capture different image details.
+
+Example:
+
+3×3 → local patterns
+
+5×5 → broader features
+
+
+
+---
+
+c) Number of Layers
+
+More layers:
+
+learn deeper features
+
+improve accuracy
+
+increase computational cost
+
+
+
+---
+
+d) Optimizer Selection
+
+Different optimizers:
+
+SGD
+
+RMSProp
+
+Adam
+
+
+Adam usually provides best convergence.
+
+
+---
+
+e) Dropout Optimization
+
+Higher dropout:
+
+reduces overfitting
+
+may reduce learning if too large
+
+
+
+---
+
+20. Advantages of CNN
+
+Automatic feature extraction
+
+High image classification accuracy
+
+Handles complex image patterns
+
+Reduces manual preprocessing
+
+
+
+---
+
+21. Applications of CNN
+
+CNNs are widely used in:
+
+Medical imaging
+
+Agricultural disease detection
+
+Face recognition
+
+Self-driving cars
+
+Object detection
+
+Security systems
+
+
+
+---
+
+22. Expected Result
+
+The CNN model learns image features from CIFAR-10 and classifies images into 10 categories with good accuracy.
+
+Training and validation accuracy improve over epochs, showing successful learning.
+
+
+---
+
+Conclusion
+
+In this experiment:
+
+CIFAR-10 dataset was used for image classification
+
+Data preprocessing and normalization were performed
+
+A CNN model was designed with multiple convolution layers
+
+Hyperparameters like learning rate, filter size, optimizer, dropout, and layers were optimized
+
+The model was trained and validated successfully
+
+
+CNN proved highly effective for multiclass image classification tasks because of its strong feature extraction capability.
